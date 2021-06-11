@@ -1,6 +1,6 @@
 import { Room } from "../domain/room";
 import { RoomStoreInMemory } from "../infrastructure/room.store.in-memory";
-import { CannotLeaveUnjoinedRoomError, LeaveRoomCommand, LeaveRoomHandler } from "./leave-room.command";
+import { CannotLeaveUnexistingRoomError, CannotLeaveUnjoinedRoomError, LeaveRoomCommand, LeaveRoomHandler } from "./leave-room.command";
 import { RoomStore } from "./room.store";
 
 describe("LeaveRoomCommand", () => {
@@ -26,5 +26,13 @@ describe("LeaveRoomCommand", () => {
     const handler = new LeaveRoomHandler(roomStore);
 
     expect(() => handler.handle(command)).toThrow(CannotLeaveUnjoinedRoomError);
+  });
+
+  it("should not allow a user to leave an unexisting room", () => {
+    const command: LeaveRoomCommand = { user: "Cyril", room: "hall" };
+    const roomStore: RoomStore = new RoomStoreInMemory();
+    const handler = new LeaveRoomHandler(roomStore);
+
+    expect(() => handler.handle(command)).toThrow(CannotLeaveUnexistingRoomError);
   });
 });

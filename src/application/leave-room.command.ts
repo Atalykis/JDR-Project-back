@@ -12,7 +12,7 @@ export class LeaveRoomHandler {
   handle(command: LeaveRoomCommand) {
     const room = this.roomStore.load(command.room);
     if (!room) {
-      return;
+      throw new CannotLeaveUnexistingRoomError(command.user);
     }
     if (!room.has(command.user)) {
       throw new CannotLeaveUnjoinedRoomError(command.user);
