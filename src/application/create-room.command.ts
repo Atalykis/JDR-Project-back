@@ -16,6 +16,7 @@ export class CreateRoomHandler {
     }
     const room = new Room(command.name);
     this.roomStore.add(room);
+    return room.name;
   }
 }
 
