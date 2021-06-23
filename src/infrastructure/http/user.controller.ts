@@ -1,32 +1,44 @@
-import { Body, ConflictException, Controller, Post, ValidationPipe } from "@nestjs/common";
+import { Body, ConflictException, Controller, HttpCode, HttpStatus, Post, UseGuards, ValidationPipe } from "@nestjs/common";
+import { AuthGuard } from "@nestjs/passport";
 import { IsString, MaxLength, MinLength } from "class-validator";
-import { CannotCreateUserWithAlreadyTakenUsernameError, RegisterUserHandler } from "../../application/register.command";
+import { AuthenticateUserHandler } from "../../application/authenticate-user.command";
+import { CannotCreateUserWithAlreadyTakenUsernameError, RegisterUserHandler } from "../../application/register-user.command";
 
+class registerUserDto {
+  @IsString()
+  @MinLength(5)
+  @MaxLength(15)
+  username!: string;
 
-class registerUserDto{
-    @IsString()
-    @MinLength(5)
-    @MaxLength(15)
-    username!: string;
-  
-    @IsString()
-    @MinLength(3)
-    @MaxLength(30)
-    password!: string;
+  @IsString()
+  @MinLength(3)
+  @MaxLength(30)
+  password!: string;
 }
 @Controller()
 export class UserController {
-    constructor(private readonly registerUserHandler: RegisterUserHandler) {}
+  constructor(private readonly registerUserHandler: RegisterUserHandler, private readonly authenticateUserHandler: AuthenticateUserHandler) {}
 
-    @Post("/register")
-    registerUser(@Body(ValidationPipe) {username, password} : registerUserDto){
-        try {
-            this.registerUserHandler.handle({username, password});
-        } catch (error) {
-            if(error instanceof CannotCreateUserWithAlreadyTakenUsernameError){
-                throw new ConflictException(error.message);
-            }
-            throw error
-        }
+  @Post("/register")
+  registerUser(@Body(ValidationPipe) { username, password }: registerUserDto) {
+    try {
+      this.registerUserHandler.handle({ username, password });
+    } catch (error) {
+      if (error instanceof CannotCreateUserWithAlreadyTakenUsernameError) {
+        throw new ConflictException(error.message);
+      }
+      throw error;
     }
+  }
+
+  @UseGuards(AuthGuard("local"))
+  @Post("/login")
+  @HttpCode(HttpStatus.OK)
+  login(@Body() { username, password }: any) {
+    try {
+      return this.authenticateUserHandler.handle({ username, password });
+    } catch (error) {
+      throw error;
+    }
+  }
 }
