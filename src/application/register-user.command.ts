@@ -2,15 +2,15 @@ import { User } from "../domain/user";
 import { CannotCreateRoomWithAlreadyTakenNameError } from "./create-room.command";
 import { UserStore } from "./user.store";
 
-export interface RegisterCommand {
+export interface RegisterUserCommand {
   username: string;
   password: string;
 }
 
-export class RegisterHandler {
+export class RegisterUserHandler {
   constructor(private readonly userStore: UserStore) {}
 
-  handle(command: RegisterCommand) {
+  handle(command: RegisterUserCommand) {
     const alreadyExistingUser = this.userStore.load(command.username);
 
     if (alreadyExistingUser) {

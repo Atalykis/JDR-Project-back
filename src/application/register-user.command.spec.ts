@@ -1,13 +1,13 @@
 import { User } from "../domain/user";
 import { UserStoreInMemory } from "../infrastructure/user.store.in-memory";
-import { CannotCreateUserWithAlreadyTakenUsernameError, RegisterCommand, RegisterHandler } from "./register.command";
+import { CannotCreateUserWithAlreadyTakenUsernameError, RegisterUserCommand, RegisterUserHandler } from "./register-user.command";
 import { UserStore } from "./user.store";
 
 describe("RegisterUserCommand", () => {
   it("should allow a newcomer to register as a User", () => {
-    const command: RegisterCommand = { username: "Aetherall", password: "pass" };
+    const command: RegisterUserCommand = { username: "Aetherall", password: "pass" };
     const userStore: UserStore = new UserStoreInMemory();
-    const handler = new RegisterHandler(userStore);
+    const handler = new RegisterUserHandler(userStore);
 
     handler.handle(command);
 
@@ -16,9 +16,9 @@ describe("RegisterUserCommand", () => {
   });
 
   it("should not allow to create two user with the same username", () => {
-    const command: RegisterCommand = { username: "Aetherall", password: "pass" };
+    const command: RegisterUserCommand = { username: "Aetherall", password: "pass" };
     const userStore: UserStore = new UserStoreInMemory();
-    const handler = new RegisterHandler(userStore);
+    const handler = new RegisterUserHandler(userStore);
     const user = new User("Aetherall", "pass");
     userStore.register(user);
     console.log(userStore);
