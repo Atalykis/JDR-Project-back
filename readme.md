@@ -18,3 +18,10 @@ Can a User be a MJ and a Player ? In the same room ? In different rooms ?
 Can a Room have multiple MJ inside ?
 
 ## TODO
+
+// Guard reading the header for the Authorization token
+// Guard <-- injects token manager, write username on request object
+// CustomParamDecorator --> lire la requete, get the username
+// Controller, use Guard + use Custom Param Decorator = have username when emitting command
+
+JDR depend d'Authentication et c'est normal
