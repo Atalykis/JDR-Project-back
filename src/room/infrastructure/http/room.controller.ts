@@ -12,10 +12,11 @@ import {
   ValidationPipe,
 } from "@nestjs/common";
 import { IsString, MinLength, MaxLength } from "class-validator";
-import { AuthGuard } from "../../../authentication/infrastructure/guard/auth.guard";
+import { AuthGuard, Username } from "../../../authentication/infrastructure/guard/auth.guard";
 import { CannotCreateRoomWithAlreadyTakenNameError, CreateRoomHandler } from "../../application/create-room.command";
-import { CannotGetMembersOfNonExistingRoom, GetRoomMembersHandler } from "../../application/get-room-members.query";
+import { CannotGetPlayersOfNonExistingRoom, GetRoomPlayersHandler } from "../../application/get-room-players.query";
 import { CannotJoinAleadyJoinedRoomError, CannotJoinUnexistingRoomError, JoinRoomHandler } from "../../application/join-room.command";
+import { CannotKickPlayerIfNotMjError, CannotKickPlayerOutsideARoomError, KickPlayerHandler } from "../../application/kick-player.command";
 import { CannotLeaveUnexistingRoomError, CannotLeaveUnjoinedRoomError, LeaveRoomHandler } from "../../application/leave-room.command";
 
 class CreateRoomInputDto {
@@ -25,27 +26,30 @@ class CreateRoomInputDto {
   name!: string;
 }
 
-class RoomAndUserInputDto {
-  @IsString()
-  @MinLength(5)
-  @MaxLength(30)
-  room!: string;
-
-  @IsString()
-  @MinLength(5)
-  @MaxLength(30)
-  user!: string;
-}
-
-class GetRoomMembersDto {
+class RoomInputDto {
   @IsString()
   @MinLength(5)
   @MaxLength(30)
   room!: string;
 }
 
-class JoinRoomInputDto extends RoomAndUserInputDto {}
-class LeaveRoomInputDto extends RoomAndUserInputDto {}
+class KickPlayerDto {
+  @IsString()
+  @MinLength(5)
+  @MaxLength(30)
+  player!: string;
+
+  @IsString()
+  @MinLength(5)
+  @MaxLength(30)
+  room!: string;
+}
+
+class GetRoomPlayersDto extends RoomInputDto {}
+
+class JoinRoomInputDto extends RoomInputDto {}
+
+class LeaveRoomInputDto extends RoomInputDto {}
 
 @Controller()
 export class RoomController {
@@ -53,14 +57,15 @@ export class RoomController {
     private readonly createRoomHandler: CreateRoomHandler,
     private readonly joinRoomHandler: JoinRoomHandler,
     private readonly leaveRoomHandler: LeaveRoomHandler,
-    private readonly getRoomMembersHandler: GetRoomMembersHandler
+    private readonly getRoomPlayersHandler: GetRoomPlayersHandler,
+    private readonly kickPlayerHandler: KickPlayerHandler
   ) {}
 
   @UseGuards(AuthGuard)
   @Post("/room")
-  createRoom(@Body(ValidationPipe) { name }: CreateRoomInputDto) {
+  createRoom(@Body(ValidationPipe) { name }: CreateRoomInputDto, @Username() username: string) {
     try {
-      return this.createRoomHandler.handle({ name });
+      return this.createRoomHandler.handle({ name, mj: username });
     } catch (error) {
       if (error instanceof CannotCreateRoomWithAlreadyTakenNameError) {
         throw new ConflictException(error.message);
@@ -69,9 +74,10 @@ export class RoomController {
     }
   }
 
+  @UseGuards(AuthGuard)
   @Post("/join")
   @HttpCode(HttpStatus.NO_CONTENT)
-  joinRoom(@Body(ValidationPipe) { room, user }: JoinRoomInputDto) {
+  joinRoom(@Body(ValidationPipe) { room }: JoinRoomInputDto, @Username() user: string) {
     try {
       this.joinRoomHandler.handle({ room, user });
     } catch (error) {
@@ -85,9 +91,10 @@ export class RoomController {
     }
   }
 
+  @UseGuards(AuthGuard)
   @Post("/leave")
   @HttpCode(HttpStatus.NO_CONTENT)
-  leaveRoom(@Body(ValidationPipe) { room, user }: LeaveRoomInputDto) {
+  leaveRoom(@Body(ValidationPipe) { room }: LeaveRoomInputDto, @Username() user: string) {
     try {
       this.leaveRoomHandler.handle({ room, user });
     } catch (error) {
@@ -102,13 +109,27 @@ export class RoomController {
     }
   }
 
-  @Get("/members")
-  getMembers(@Body(ValidationPipe) { room }: GetRoomMembersDto) {
+  @Get("/players")
+  getPlayers(@Body(ValidationPipe) { room }: GetRoomPlayersDto) {
     try {
-      return this.getRoomMembersHandler.handle({ room });
+      return this.getRoomPlayersHandler.handle({ room });
     } catch (error) {
-      if (error instanceof CannotGetMembersOfNonExistingRoom) {
+      if (error instanceof CannotGetPlayersOfNonExistingRoom) {
         throw new NotFoundException(error.message);
+      }
+      throw error;
+    }
+  }
+
+  @UseGuards(AuthGuard)
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Post("/kick")
+  kickPlayer(@Body(ValidationPipe) { player, room }: KickPlayerDto, @Username() originator: string) {
+    try {
+      this.kickPlayerHandler.handle({ player, room, originator });
+    } catch (error) {
+      if (error instanceof CannotKickPlayerIfNotMjError) {
+        throw new ForbiddenException(error.message);
       }
       throw error;
     }

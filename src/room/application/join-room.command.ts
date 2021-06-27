@@ -1,8 +1,8 @@
 import { RoomStore } from "../infrastructure/store/room.store";
 
 export interface JoinRoomCommand {
-  user: string;
   room: string;
+  user: string;
 }
 
 export class JoinRoomHandler {

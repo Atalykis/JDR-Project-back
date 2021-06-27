@@ -1,14 +1,27 @@
-import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
+import { CanActivate, createParamDecorator, ExecutionContext, Inject, Injectable } from "@nestjs/common";
 import { Observable } from "rxjs";
 import { TokenManager } from "../../application/token-manager";
 
+export const Username = createParamDecorator((_data: any, ctx: ExecutionContext) => {
+  const request = ctx.switchToHttp().getRequest();
+  const username = request.username;
+  return username;
+});
+
+@Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private readonly tokenManager: TokenManager) {}
+  constructor(@Inject("TokenManager") private readonly tokenManager: TokenManager) {}
+
   canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest();
     if (request.headers.authorization) {
-      const user = this.tokenManager.getUsernameFromAccessToken(request.headers.authorization);
-      console.log(user);
+      try {
+        const username = this.tokenManager.getUsernameFromAccessToken(request.headers.authorization);
+        request.username = username;
+      } catch (error) {
+        console.log(error);
+        return false;
+      }
     }
     return true;
   }

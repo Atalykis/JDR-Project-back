@@ -12,4 +12,8 @@ export class RoomStoreInMemory implements RoomStore {
   add(room: Room) {
     this.rooms.push(room);
   }
+
+  clear() {
+    this.rooms = [];
+  }
 }

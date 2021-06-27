@@ -21,7 +21,6 @@ describe("RegisterUserCommand", () => {
     const handler = new RegisterUserHandler(userStore);
     const user = new User("Aetherall", "pass");
     userStore.register(user);
-    console.log(userStore);
 
     expect(() => handler.handle(command)).toThrow(CannotCreateUserWithAlreadyTakenUsernameError);
   });

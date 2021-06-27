@@ -24,11 +24,7 @@ import { CryptrTokenManager } from "./token/crypto.token-manager";
       useFactory: (userStore: UserStore) => new AuthenticateUserHandler(userStore),
       inject: ["UserStore"],
     },
-    {
-      provide: AuthGuard,
-      useFactory: (tokenManager: TokenManager) => new AuthGuard(tokenManager),
-      inject: ["TokenManager"],
-    },
   ],
+  exports: ["TokenManager"],
 })
 export class UserModule {}
