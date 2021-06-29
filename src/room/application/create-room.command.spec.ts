@@ -5,7 +5,7 @@ import { CannotCreateRoomWithAlreadyTakenNameError, CreateRoomCommand, CreateRoo
 
 describe("CreateRoomCommand", () => {
   it("should allow a user to create a new room", () => {
-    const command: CreateRoomCommand = { name: "room", mj: "Mj" };
+    const command: CreateRoomCommand = { name: "room", mj: "Mj", adventure: "GreatEscape" };
     const roomStore: RoomStore = new RoomStoreInMemory();
     const handler = new CreateRoomHandler(roomStore);
 
@@ -17,7 +17,7 @@ describe("CreateRoomCommand", () => {
   });
 
   it("should return the name of the created room", () => {
-    const command: CreateRoomCommand = { name: "room", mj: "Mj" };
+    const command: CreateRoomCommand = { name: "room", mj: "Mj", adventure: "GreatEscape" };
     const roomStore: RoomStore = new RoomStoreInMemory();
     const handler = new CreateRoomHandler(roomStore);
 
@@ -27,10 +27,10 @@ describe("CreateRoomCommand", () => {
   });
 
   it("should not allow a user to create two room with same name", () => {
-    const command: CreateRoomCommand = { name: "room", mj: "Mj" };
+    const command: CreateRoomCommand = { name: "room", mj: "Mj", adventure: "GreatEscape" };
     const roomStore: RoomStore = new RoomStoreInMemory();
     const handler = new CreateRoomHandler(roomStore);
-    const existing = new Room("room", "Mj");
+    const existing = new Room("room", "Mj", "GreatEscape");
     roomStore.add(existing);
 
     expect(() => handler.handle(command)).toThrow(CannotCreateRoomWithAlreadyTakenNameError);

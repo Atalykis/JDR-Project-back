@@ -1,7 +1,7 @@
 import { Adventure } from "../domain/adventure";
 import { AdventureStoreInMemory } from "../infrastructure/adventure.store.in-memory";
 import { AdventureStore } from "./adventure.store";
-import { JoinAdventureCommand, JoinAdventureHandler } from "./join-adventure.command";
+import { CannotJoinNonExistingAdventureError, JoinAdventureCommand, JoinAdventureHandler } from "./join-adventure.command";
 
 describe("JoinAdventureCommand", () => {
   it("should allow a User to join a room as a player", () => {
@@ -15,5 +15,14 @@ describe("JoinAdventureCommand", () => {
     handler.handle(command);
 
     expect(adventure.adventurers).toEqual(["ZephDio"]);
+  });
+
+  it("should fail if the adventure doesn't exist", () => {
+    const command: JoinAdventureCommand = { adventure: "GreatEscape", user: "ZephDio" };
+    const adventureStore: AdventureStore = new AdventureStoreInMemory();
+
+    const handler = new JoinAdventureHandler(adventureStore);
+
+    expect(() => handler.handle(command)).toThrow(CannotJoinNonExistingAdventureError);
   });
 });

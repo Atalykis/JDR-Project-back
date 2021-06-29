@@ -27,7 +27,7 @@ export class CannotJoinAleadyJoinedRoomError extends Error {
 }
 
 export class CannotJoinUnexistingRoomError extends Error {
-  constructor(user: string) {
-    super(`Could not join the room because ${user} was already present`);
+  constructor(room: string) {
+    super(`Could not join the room because ${room} does not exist`);
   }
 }

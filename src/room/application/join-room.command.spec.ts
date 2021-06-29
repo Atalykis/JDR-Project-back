@@ -7,7 +7,7 @@ describe("JoinRoomCommand", () => {
   it("should allow a user to join a room", () => {
     const command: JoinRoomCommand = { user: "Cyril", room: "everyone" };
     const roomStore: RoomStore = new RoomStoreInMemory();
-    const room = new Room("everyone", "mj");
+    const room = new Room("everyone", "mj", "GreatEscape");
     roomStore.add(room);
 
     const handler = new JoinRoomHandler(roomStore);
@@ -20,7 +20,7 @@ describe("JoinRoomCommand", () => {
   it("should not allow an user to join a room he already joined", () => {
     const command: JoinRoomCommand = { user: "Cyril", room: "noone" };
     const roomStore = new RoomStoreInMemory();
-    const room = new Room("noone", "mj");
+    const room = new Room("noone", "mj", "GreatEscape");
     roomStore.add(room);
     room.join("Cyril");
 

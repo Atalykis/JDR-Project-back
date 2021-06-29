@@ -18,7 +18,7 @@ describe("KickPlayerCommand", () => {
   });
 
   it("should remove a player from the room", () => {
-    const room = new Room("aRoom", "mj");
+    const room = new Room("aRoom", "mj", "GreatEscape");
     const player = new User("Cyril", "password");
     room.join(player.username);
     roomStore.add(room);
@@ -38,7 +38,7 @@ describe("KickPlayerCommand", () => {
   });
 
   it("should fail if the player is not in the room", () => {
-    const room = new Room("aRoom", "mj");
+    const room = new Room("aRoom", "mj", "GreatEscape");
     const player = new User("Cyril", "password");
     roomStore.add(room);
 
@@ -48,7 +48,7 @@ describe("KickPlayerCommand", () => {
   });
 
   it("should fail if the originator of the kick is not the mj", () => {
-    const room = new Room("aRoom", "mj");
+    const room = new Room("aRoom", "mj", "GreatEscape");
     const player = new User("Cyril", "password");
     room.join(player.username);
     roomStore.add(room);

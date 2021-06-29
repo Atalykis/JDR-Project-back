@@ -8,7 +8,7 @@ describe("GetRoomPlayersQuery", () => {
     const roomStore: RoomStore = new RoomStoreInMemory();
     const query: GetRoomPlayersQuery = { room: "palais" };
     const handler = new GetRoomPlayersHandler(roomStore);
-    const room = new Room("palais", "Mj");
+    const room = new Room("palais", "Mj", "GreatEscape");
     roomStore.add(room);
     room.join("Cyril");
     room.join("Nico");

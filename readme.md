@@ -42,3 +42,10 @@ Can a Room have multiple MJ inside ?
 // Controller, use Guard + use Custom Param Decorator = have username when emitting command
 
 JDR depend d'Authentication et c'est normal
+
+## Comment dependre d'info dans advanture dans character
+
+Adventure -> GetCharacterNamesQuery(advantureName) -> CharacterName[]
+
+CreateCharacterCommand -> App{AdventureGateway} <-- implements -- Infra{RealAdventureGateway}
+CreateCharacterCommand -> App{AdventureGateway} <-- implements -- Infra{FakeAdventureGateway}

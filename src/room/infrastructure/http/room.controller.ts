@@ -24,6 +24,11 @@ class CreateRoomInputDto {
   @MinLength(5)
   @MaxLength(30)
   name!: string;
+
+  @IsString()
+  @MinLength(5)
+  @MaxLength(30)
+  adventure!: string;
 }
 
 class RoomInputDto {
@@ -63,9 +68,9 @@ export class RoomController {
 
   @UseGuards(AuthGuard)
   @Post("/room")
-  createRoom(@Body(ValidationPipe) { name }: CreateRoomInputDto, @Username() username: string) {
+  createRoom(@Body(ValidationPipe) { name, adventure }: CreateRoomInputDto, @Username() username: string) {
     try {
-      return this.createRoomHandler.handle({ name, mj: username });
+      return this.createRoomHandler.handle({ name, mj: username, adventure: adventure });
     } catch (error) {
       if (error instanceof CannotCreateRoomWithAlreadyTakenNameError) {
         throw new ConflictException(error.message);

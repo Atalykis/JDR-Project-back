@@ -7,7 +7,7 @@ describe("LeaveRoomCommand", () => {
   it("should allow a user to leave a room", () => {
     const command: LeaveRoomCommand = { user: "Cyril", room: "hall" };
     const roomStore: RoomStore = new RoomStoreInMemory();
-    const room = new Room("hall", "mj");
+    const room = new Room("hall", "mj", "GreatEscape");
     roomStore.add(room);
     room.join("Cyril");
 
@@ -21,7 +21,7 @@ describe("LeaveRoomCommand", () => {
   it("should not allow a user to leave a room they're not in", () => {
     const command: LeaveRoomCommand = { user: "Cyril", room: "hall" };
     const roomStore: RoomStore = new RoomStoreInMemory();
-    const room = new Room("hall", "mj");
+    const room = new Room("hall", "mj", "GreatEscape");
     roomStore.add(room);
     const handler = new LeaveRoomHandler(roomStore);
 

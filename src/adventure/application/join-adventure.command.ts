@@ -11,10 +11,14 @@ export class JoinAdventureHandler {
   handle(command: JoinAdventureCommand) {
     const adventure = this.adventureStore.load(command.adventure);
     if (!adventure) {
-      throw new Error(command.adventure);
+      throw new CannotJoinNonExistingAdventureError(command.adventure);
     }
     adventure.join(command.user);
   }
 }
 
-// CannotJoinNonExistingAdventureError
+export class CannotJoinNonExistingAdventureError extends Error {
+  constructor(name: string) {
+    super(`Cannot join non existing adventure ${name}`);
+  }
+}

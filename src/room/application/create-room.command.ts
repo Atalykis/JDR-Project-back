@@ -4,6 +4,7 @@ import { RoomStore } from "../infrastructure/store/room.store";
 export interface CreateRoomCommand {
   name: string;
   mj: string;
+  adventure: string;
 }
 
 export class CreateRoomHandler {
@@ -15,7 +16,7 @@ export class CreateRoomHandler {
     if (alreadyExistingRoom) {
       throw new CannotCreateRoomWithAlreadyTakenNameError(command.name);
     }
-    const room = new Room(command.name, command.mj);
+    const room = new Room(command.name, command.mj, command.adventure);
     this.roomStore.add(room);
     return room.name;
   }

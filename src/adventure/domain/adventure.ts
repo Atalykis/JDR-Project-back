@@ -1,14 +1,14 @@
 export class Adventure {
-  private users: Set<string>;
+  private players: Set<string>;
   constructor(public readonly name: string, public readonly mj: string) {
-    this.users = new Set();
+    this.players = new Set();
   }
 
   join(user: string) {
-    this.users.add(user);
+    this.players.add(user);
   }
 
   get adventurers() {
-    return [...this.users];
+    return [...this.players];
   }
 }
