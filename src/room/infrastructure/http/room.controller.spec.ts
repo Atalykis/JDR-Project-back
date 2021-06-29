@@ -6,9 +6,10 @@ import { RoomStoreInMemory } from "../store/room.store.in-memory";
 import { RoomModule } from "../room.module";
 import { Room } from "../../domain/room";
 import { RoomStore } from "../store/room.store";
-import { User } from "../../../authentication/domain/user";
-import { TokenManager } from "../../../authentication/application/token-manager";
-import { UserStore } from "../../../authentication/infrastructure/store/user.store";
+import { UserStore } from "../../../user/infrastructure/store/user.store";
+import { TokenManager } from "../../../user/application/token-manager";
+import { User } from "../../../user/domain/user";
+
 // E2E
 
 function makeGetAuthenticatedToken(module: TestingModule) {

@@ -1,10 +1,6 @@
-import {
-  CannotCreateCharacterWithAlreadyTakenNameForUserError,
-  Character,
-  CharacterStoreInMemory,
-  CreateCharacterCommand,
-  CreateCharacterHandler,
-} from "./create-character.comand";
+import { Character } from "../domain/character";
+import { CharacterStoreInMemory } from "../infrastructure/character.store.in-memory";
+import { CannotCreateCharacterWithAlreadyTakenNameForUserError, CreateCharacterCommand, CreateCharacterHandler } from "./create-character.comand";
 
 describe("CreateCharacterCommand", () => {
   it("should create a character", () => {

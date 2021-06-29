@@ -12,7 +12,7 @@ import {
   ValidationPipe,
 } from "@nestjs/common";
 import { IsString, MinLength, MaxLength } from "class-validator";
-import { AuthGuard, Username } from "../../../authentication/infrastructure/guard/auth.guard";
+import { AuthGuard, Username } from "../../../user/infrastructure/guard/auth.guard";
 import { CannotCreateRoomWithAlreadyTakenNameError, CreateRoomHandler } from "../../application/create-room.command";
 import { CannotGetPlayersOfNonExistingRoom, GetRoomPlayersHandler } from "../../application/get-room-players.query";
 import { CannotJoinAleadyJoinedRoomError, CannotJoinUnexistingRoomError, JoinRoomHandler } from "../../application/join-room.command";

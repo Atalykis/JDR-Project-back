@@ -1,4 +1,4 @@
-import { User } from "../../authentication/domain/user";
+import { User } from "../../user/domain/user";
 import { Room } from "../domain/room";
 import { RoomStoreInMemory } from "../infrastructure/store/room.store.in-memory";
 import {

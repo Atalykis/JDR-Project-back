@@ -1,8 +1,5 @@
 import { Module } from "@nestjs/common";
-import { TokenManager } from "../../authentication/application/token-manager";
-import { AuthGuard } from "../../authentication/infrastructure/guard/auth.guard";
-import { CryptrTokenManager } from "../../authentication/infrastructure/token/crypto.token-manager";
-import { UserModule } from "../../authentication/infrastructure/user.module";
+import { UserModule } from "../../user/infrastructure/user.module";
 import { CreateRoomHandler } from "../application/create-room.command";
 import { GetRoomPlayersHandler } from "../application/get-room-players.query";
 import { JoinRoomHandler } from "../application/join-room.command";
