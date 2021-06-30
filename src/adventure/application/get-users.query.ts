@@ -1,3 +1,4 @@
+import { CannotGetPlayersOfNonExistingRoom } from "../../room/application/get-room-players.query";
 import { AdventureStore } from "./adventure.store";
 
 export type GetUsersQuery = {
@@ -9,6 +10,15 @@ export class GetUsersHandler {
 
   handle(query: GetUsersQuery) {
     const adventure = this.adventureStore.load(query.adventure);
-    return adventure?.adventurers;
+    if (!adventure) {
+      throw new CannotGetUsersOfNonExistingAdventureError(query.adventure);
+    }
+    return adventure.adventurers;
+  }
+}
+
+export class CannotGetUsersOfNonExistingAdventureError extends Error {
+  constructor(adventure: string) {
+    super(`Cannot get user of non existing adventure ${adventure}`);
   }
 }

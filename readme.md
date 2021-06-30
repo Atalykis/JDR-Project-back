@@ -43,7 +43,7 @@ Can a Room have multiple MJ inside ?
 
 JDR depend d'Authentication et c'est normal
 
-## Comment dependre d'info dans advanture dans character
+## Comment dependre d'info d'adventure dans character
 
 Adventure -> GetCharacterNamesQuery(advantureName) -> CharacterName[]
 
