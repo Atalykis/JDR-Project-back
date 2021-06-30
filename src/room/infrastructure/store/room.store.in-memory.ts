@@ -1,5 +1,5 @@
+import { RoomStore } from "../../application/room.store";
 import { Room } from "../../domain/room";
-import { RoomStore } from "./room.store";
 
 export class RoomStoreInMemory implements RoomStore {
   private rooms: Room[] = [];

@@ -1,5 +1,5 @@
-import { Adventure } from "../domain/adventure";
-import { AdventureStore } from "./adventure.store";
+import { Adventure } from "../../domain/adventure";
+import { AdventureStore } from "../adventure.store";
 
 export interface CreateAdventureCommand {
   name: string;

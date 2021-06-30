@@ -1,6 +1,6 @@
-import { Adventure } from "../domain/adventure";
-import { AdventureStoreInMemory } from "../infrastructure/adventure.store.in-memory";
-import { AdventureStore } from "./adventure.store";
+import { Adventure } from "../../domain/adventure";
+import { AdventureStoreInMemory } from "../../infrastructure/adventure.store.in-memory";
+import { AdventureStore } from "../adventure.store";
 import { CannotJoinNonExistingAdventureError, JoinAdventureCommand, JoinAdventureHandler } from "./join-adventure.command";
 
 describe("JoinAdventureCommand", () => {

@@ -1,5 +1,5 @@
-import { Adventure } from "../domain/adventure";
-import { AdventureStoreInMemory } from "../infrastructure/adventure.store.in-memory";
+import { Adventure } from "../../domain/adventure";
+import { AdventureStoreInMemory } from "../../infrastructure/adventure.store.in-memory";
 import { GetUsersQuery, GetUsersHandler, CannotGetUsersOfNonExistingAdventureError } from "./get-users.query";
 
 describe("get users names query", () => {

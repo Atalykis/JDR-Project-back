@@ -1,5 +1,5 @@
-import { Room } from "../domain/room";
-import { RoomStore } from "../infrastructure/store/room.store";
+import { Room } from "../../domain/room";
+import { RoomStore } from "../room.store";
 
 export interface CreateRoomCommand {
   name: string;

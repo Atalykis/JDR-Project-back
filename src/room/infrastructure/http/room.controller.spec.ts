@@ -1,14 +1,12 @@
 import { HttpStatus, INestApplication } from "@nestjs/common";
 import request from "supertest";
 import { Test, TestingModule } from "@nestjs/testing";
-
-import { RoomStoreInMemory } from "../store/room.store.in-memory";
 import { RoomModule } from "../room.module";
 import { Room } from "../../domain/room";
-import { RoomStore } from "../store/room.store";
-import { UserStore } from "../../../user/infrastructure/store/user.store";
 import { TokenManager } from "../../../user/application/token-manager";
 import { User } from "../../../user/domain/user";
+import { RoomStore } from "../../application/room.store";
+import { UserStore } from "../../../user/application/user.store";
 
 // E2E
 

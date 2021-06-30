@@ -1,11 +1,11 @@
 import { Module } from "@nestjs/common";
+import { AuthenticateUserHandler } from "../application/authenticate-user.command/authenticate-user.command";
+import { RegisterUserHandler } from "../application/register-user.command/register-user.command";
 
-import { AuthenticateUserHandler } from "../application/authenticate-user.command";
-import { RegisterUserHandler } from "../application/register-user.command";
 import { TokenManager } from "../application/token-manager";
+import { UserStore } from "../application/user.store";
 import { AuthGuard } from "./guard/auth.guard";
 import { UserController } from "./http/user.controller";
-import { UserStore } from "./store/user.store";
 import { UserStoreInMemory } from "./store/user.store.in-memory";
 import { CryptrTokenManager } from "./token/crypto.token-manager";
 

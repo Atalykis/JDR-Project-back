@@ -1,5 +1,4 @@
-import { CannotGetPlayersOfNonExistingRoom } from "../../room/application/get-room-players.query";
-import { AdventureStore } from "./adventure.store";
+import { AdventureStore } from "../adventure.store";
 
 export type GetUsersQuery = {
   adventure: string;

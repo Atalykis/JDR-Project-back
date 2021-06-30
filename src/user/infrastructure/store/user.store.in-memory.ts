@@ -1,5 +1,5 @@
+import { UserStore } from "../../application/user.store";
 import { User } from "../../domain/user";
-import { UserStore } from "./user.store";
 
 export class UserStoreInMemory implements UserStore {
   private users: User[] = [];

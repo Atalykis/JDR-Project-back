@@ -13,11 +13,19 @@ import {
 } from "@nestjs/common";
 import { IsString, MinLength, MaxLength } from "class-validator";
 import { AuthGuard, Username } from "../../../user/infrastructure/guard/auth.guard";
-import { CannotCreateRoomWithAlreadyTakenNameError, CreateRoomHandler } from "../../application/create-room.command";
-import { CannotGetPlayersOfNonExistingRoom, GetRoomPlayersHandler } from "../../application/get-room-players.query";
-import { CannotJoinAleadyJoinedRoomError, CannotJoinUnexistingRoomError, JoinRoomHandler } from "../../application/join-room.command";
-import { CannotKickPlayerIfNotMjError, CannotKickPlayerOutsideARoomError, KickPlayerHandler } from "../../application/kick-player.command";
-import { CannotLeaveUnexistingRoomError, CannotLeaveUnjoinedRoomError, LeaveRoomHandler } from "../../application/leave-room.command";
+import { CannotCreateRoomWithAlreadyTakenNameError, CreateRoomHandler } from "../../application/create-room.command/create-room.command";
+import { CannotGetPlayersOfNonExistingRoom, GetRoomPlayersHandler } from "../../application/get-room-players.query/get-room-players.query";
+import {
+  CannotJoinAleadyJoinedRoomError,
+  CannotJoinUnexistingRoomError,
+  JoinRoomHandler,
+} from "../../application/join-room.command/join-room.command";
+import { CannotKickPlayerIfNotMjError, KickPlayerHandler } from "../../application/kick-player.command/kick-player.command";
+import {
+  CannotLeaveUnexistingRoomError,
+  CannotLeaveUnjoinedRoomError,
+  LeaveRoomHandler,
+} from "../../application/leave-room.command/leave-room.command";
 
 class CreateRoomInputDto {
   @IsString()

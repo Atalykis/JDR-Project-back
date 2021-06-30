@@ -1,4 +1,4 @@
-import { AdventureStore } from "./adventure.store";
+import { AdventureStore } from "../adventure.store";
 
 export interface JoinAdventureCommand {
   adventure: string;

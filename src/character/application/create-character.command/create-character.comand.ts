@@ -1,5 +1,5 @@
-import { Character } from "../domain/character";
-import { CharacterStore } from "./character.store";
+import { Character } from "../../domain/character";
+import { CharacterStore } from "../character.store";
 
 export interface CreateCharacterCommand {
   name: string;

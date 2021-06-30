@@ -1,12 +1,12 @@
 import { Module } from "@nestjs/common";
 import { UserModule } from "../../user/infrastructure/user.module";
-import { CreateRoomHandler } from "../application/create-room.command";
-import { GetRoomPlayersHandler } from "../application/get-room-players.query";
-import { JoinRoomHandler } from "../application/join-room.command";
-import { KickPlayerHandler } from "../application/kick-player.command";
-import { LeaveRoomHandler } from "../application/leave-room.command";
+import { CreateRoomHandler } from "../application/create-room.command/create-room.command";
+import { GetRoomPlayersHandler } from "../application/get-room-players.query/get-room-players.query";
+import { JoinRoomHandler } from "../application/join-room.command/join-room.command";
+import { KickPlayerHandler } from "../application/kick-player.command/kick-player.command";
+import { LeaveRoomHandler } from "../application/leave-room.command/leave-room.command";
+import { RoomStore } from "../application/room.store";
 import { RoomController } from "./http/room.controller";
-import { RoomStore } from "./store/room.store";
 import { RoomStoreInMemory } from "./store/room.store.in-memory";
 
 @Module({

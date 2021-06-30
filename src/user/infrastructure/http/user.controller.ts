@@ -11,8 +11,8 @@ import {
   ValidationPipe,
 } from "@nestjs/common";
 import { IsString, MaxLength, MinLength } from "class-validator";
-import { AuthenticateUserHandler } from "../../application/authenticate-user.command";
-import { CannotCreateUserWithAlreadyTakenUsernameError, RegisterUserHandler } from "../../application/register-user.command";
+import { AuthenticateUserHandler } from "../../application/authenticate-user.command/authenticate-user.command";
+import { CannotCreateUserWithAlreadyTakenUsernameError, RegisterUserHandler } from "../../application/register-user.command/register-user.command";
 import { AuthGuard } from "../guard/auth.guard";
 
 class registerUserDto {

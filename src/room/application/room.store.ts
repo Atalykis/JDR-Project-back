@@ -1,4 +1,4 @@
-import { Room } from "../../domain/room";
+import { Room } from "../domain/room";
 
 export interface RoomStore {
   load(name: string): Room | undefined;

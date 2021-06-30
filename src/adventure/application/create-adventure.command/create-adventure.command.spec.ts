@@ -1,6 +1,6 @@
-import { Adventure } from "../domain/adventure";
-import { AdventureStoreInMemory } from "../infrastructure/adventure.store.in-memory";
-import { AdventureStore } from "./adventure.store";
+import { Adventure } from "../../domain/adventure";
+import { AdventureStoreInMemory } from "../../infrastructure/adventure.store.in-memory";
+import { AdventureStore } from "../adventure.store";
 import { CannotCreateAdventureWithAlreadyTakenNameError, CreateAdventureCommand, CreateAdventureHandler } from "./create-adventure.command";
 
 describe("AdventureCreationCommand", () => {

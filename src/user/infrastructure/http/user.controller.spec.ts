@@ -1,10 +1,9 @@
 import { HttpStatus, INestApplication } from "@nestjs/common";
 import { Test } from "@nestjs/testing";
 import request from "supertest";
-
+import { UserStore } from "../../application/user.store";
 import { User } from "../../domain/user";
 import { UserModule } from "../user.module";
-import { UserStore } from "../store/user.store";
 
 describe("UserController", () => {
   let app: INestApplication;

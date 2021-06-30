@@ -1,6 +1,6 @@
-import { Room } from "../domain/room";
-import { RoomStore } from "../infrastructure/store/room.store";
-import { RoomStoreInMemory } from "../infrastructure/store/room.store.in-memory";
+import { Room } from "../../domain/room";
+import { RoomStoreInMemory } from "../../infrastructure/store/room.store.in-memory";
+import { RoomStore } from "../room.store";
 import { CannotCreateRoomWithAlreadyTakenNameError, CreateRoomCommand, CreateRoomHandler } from "./create-room.command";
 
 describe("CreateRoomCommand", () => {

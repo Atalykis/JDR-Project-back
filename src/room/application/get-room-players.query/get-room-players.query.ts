@@ -1,4 +1,4 @@
-import { RoomStore } from "../infrastructure/store/room.store";
+import { RoomStore } from "../room.store";
 
 export interface GetRoomPlayersQuery {
   room: string;

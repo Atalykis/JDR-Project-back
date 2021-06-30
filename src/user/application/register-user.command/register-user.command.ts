@@ -1,5 +1,5 @@
-import { User } from "../domain/user";
-import { UserStore } from "../infrastructure/store/user.store";
+import { User } from "../../domain/user";
+import { UserStore } from "../user.store";
 
 export interface RegisterUserCommand {
   username: string;
