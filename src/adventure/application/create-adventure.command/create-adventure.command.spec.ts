@@ -5,7 +5,7 @@ import { CannotCreateAdventureWithAlreadyTakenNameError, CreateAdventureCommand,
 
 describe("AdventureCreationCommand", () => {
   it("should allow a user to create a new Adventure", () => {
-    const command: CreateAdventureCommand = { name: "adventure", mj: "Mj" };
+    const command: CreateAdventureCommand = { name: "adventure", gm: "Gm" };
     const adventureStore: AdventureStore = new AdventureStoreInMemory();
     const handler = new CreateAdventureHandler(adventureStore);
 
@@ -16,10 +16,10 @@ describe("AdventureCreationCommand", () => {
   });
 
   it("should not allow a user to create two room with same name", () => {
-    const command: CreateAdventureCommand = { name: "room", mj: "Mj" };
+    const command: CreateAdventureCommand = { name: "room", gm: "Gm" };
     const adventureStore: AdventureStore = new AdventureStoreInMemory();
     const handler = new CreateAdventureHandler(adventureStore);
-    const existing = new Adventure("room", "Mj");
+    const existing = new Adventure("room", "Gm");
     adventureStore.add(existing);
 
     expect(() => handler.handle(command)).toThrow(CannotCreateAdventureWithAlreadyTakenNameError);

@@ -6,7 +6,7 @@ describe("get users names query", () => {
   it("should get all names of character from an adventure", () => {
     const query: GetUsersQuery = { adventure: "GreatEscape" };
     const adventureStore = new AdventureStoreInMemory();
-    const adventure = new Adventure("GreatEscape", "mj");
+    const adventure = new Adventure("GreatEscape", "gm");
     adventure.join("Aetherall");
     adventureStore.add(adventure);
 

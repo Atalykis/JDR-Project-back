@@ -5,34 +5,34 @@ Done:
 
 - As a User, I want to join the room
 - As a User, I want to list the people in the room
-- As a User, I want to become the MJ of a room I created
+- As a User, I want to become the GM of a room I created
 - As a User, I want to become a Player in a room I joined
-- As a MJ, I want to kick a Player in my room
+- As a GM, I want to kick a Player in my room
 - As a User I want to create a character
-- As a User, I want to create an Adventure as MJ
+- As a User, I want to create an Adventure as GM
 
 Pending:
 
 - As a User, I want to join an Adventure as Player
-- As a Player/MJ, I want to insert Character(s) inside of an Adventure
+- As a Player/GM, I want to insert Character(s) inside of an Adventure
 
 Delayed:
 
 - As a User, I want to list the rooms I already joined once
-- As a MJ, I want to pass my MJ right to a Player and become a Player
+- As a GM, I want to pass my GM right to a Player and become a Player
 
 User ->\* Character
 
 What is a Player ?
-What is a MJ ?
-User is a Player and / or MJ
+What is a GM ?
+User is a Player and / or GM
 What is an Aventure ?
 Is there a player limit in an Adventure/Room ?
 What is a Room ?
-How can a User define himself as a MJ ?
+How can a User define himself as a GM ?
 How can a User define himself as a Player ?
-Can a User be a MJ and a Player ? In the same room ? In different rooms ?
-Can a Room have multiple MJ inside ?
+Can a User be a GM and a Player ? In the same room ? In different rooms ?
+Can a Room have multiple GM inside ?
 
 ## TODO
 

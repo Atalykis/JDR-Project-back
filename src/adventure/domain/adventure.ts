@@ -1,6 +1,6 @@
 export class Adventure {
   private players: Set<string>;
-  constructor(public readonly name: string, public readonly mj: string) {
+  constructor(public readonly name: string, public readonly gm: string) {
     this.players = new Set();
   }
 

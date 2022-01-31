@@ -1,6 +1,6 @@
 export class Room {
   public users: Set<string>;
-  constructor(public readonly name: string, public readonly mj: string, public readonly adventure: string) {
+  constructor(public readonly name: string, public readonly gm: string, public readonly adventure: string) {
     this.users = new Set();
   }
 

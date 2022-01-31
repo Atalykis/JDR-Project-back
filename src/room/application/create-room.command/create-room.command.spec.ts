@@ -5,7 +5,7 @@ import { CannotCreateRoomWithAlreadyTakenNameError, CreateRoomCommand, CreateRoo
 
 describe("CreateRoomCommand", () => {
   it("should allow a user to create a new room", () => {
-    const command: CreateRoomCommand = { name: "room", mj: "Mj", adventure: "GreatEscape" };
+    const command: CreateRoomCommand = { name: "room", gm: "Gm", adventure: "GreatEscape" };
     const roomStore: RoomStore = new RoomStoreInMemory();
     const handler = new CreateRoomHandler(roomStore);
 
@@ -13,11 +13,11 @@ describe("CreateRoomCommand", () => {
 
     const room = roomStore.load("room");
     expect(room).toBeDefined();
-    expect(room!.mj).toBe("Mj");
+    expect(room!.gm).toBe("Gm");
   });
 
   it("should return the name of the created room", () => {
-    const command: CreateRoomCommand = { name: "room", mj: "Mj", adventure: "GreatEscape" };
+    const command: CreateRoomCommand = { name: "room", gm: "Gm", adventure: "GreatEscape" };
     const roomStore: RoomStore = new RoomStoreInMemory();
     const handler = new CreateRoomHandler(roomStore);
 
@@ -27,10 +27,10 @@ describe("CreateRoomCommand", () => {
   });
 
   it("should not allow a user to create two room with same name", () => {
-    const command: CreateRoomCommand = { name: "room", mj: "Mj", adventure: "GreatEscape" };
+    const command: CreateRoomCommand = { name: "room", gm: "Gm", adventure: "GreatEscape" };
     const roomStore: RoomStore = new RoomStoreInMemory();
     const handler = new CreateRoomHandler(roomStore);
-    const existing = new Room("room", "Mj", "GreatEscape");
+    const existing = new Room("room", "Gm", "GreatEscape");
     roomStore.add(existing);
 
     expect(() => handler.handle(command)).toThrow(CannotCreateRoomWithAlreadyTakenNameError);

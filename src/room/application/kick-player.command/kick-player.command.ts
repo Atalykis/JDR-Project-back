@@ -17,8 +17,8 @@ export class KickPlayerHandler {
     if (!room.has(command.player)) {
       throw new CannotKickPlayerOutsideARoomError(command.room);
     }
-    if (!(room.mj === command.originator)) {
-      throw new CannotKickPlayerIfNotMjError(command.room);
+    if (!(room.gm === command.originator)) {
+      throw new CannotKickPlayerIfNotGmError(command.room);
     }
     room.kick(command.player);
   }
@@ -36,8 +36,8 @@ export class CannotKickPlayerOutsideARoomError extends Error {
   }
 }
 
-export class CannotKickPlayerIfNotMjError extends Error {
+export class CannotKickPlayerIfNotGmError extends Error {
   constructor(room: string) {
-    super(`Cannot kick player in the ${room} you're not mj`);
+    super(`Cannot kick player in the ${room} you're not gm`);
   }
 }

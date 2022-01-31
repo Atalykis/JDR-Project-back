@@ -20,7 +20,7 @@ import {
   CannotJoinUnexistingRoomError,
   JoinRoomHandler,
 } from "../../application/join-room.command/join-room.command";
-import { CannotKickPlayerIfNotMjError, KickPlayerHandler } from "../../application/kick-player.command/kick-player.command";
+import { CannotKickPlayerIfNotGmError, KickPlayerHandler } from "../../application/kick-player.command/kick-player.command";
 import {
   CannotLeaveUnexistingRoomError,
   CannotLeaveUnjoinedRoomError,
@@ -78,7 +78,7 @@ export class RoomController {
   @Post("/room")
   createRoom(@Body(ValidationPipe) { name, adventure }: CreateRoomInputDto, @Username() username: string) {
     try {
-      return this.createRoomHandler.handle({ name, mj: username, adventure: adventure });
+      return this.createRoomHandler.handle({ name, gm: username, adventure: adventure });
     } catch (error) {
       if (error instanceof CannotCreateRoomWithAlreadyTakenNameError) {
         throw new ConflictException(error.message);
@@ -141,7 +141,7 @@ export class RoomController {
     try {
       this.kickPlayerHandler.handle({ player, room, originator });
     } catch (error) {
-      if (error instanceof CannotKickPlayerIfNotMjError) {
+      if (error instanceof CannotKickPlayerIfNotGmError) {
         throw new ForbiddenException(error.message);
       }
       throw error;

@@ -3,7 +3,7 @@ import { RoomStore } from "../room.store";
 
 export interface CreateRoomCommand {
   name: string;
-  mj: string;
+  gm: string;
   adventure: string;
 }
 
@@ -16,7 +16,7 @@ export class CreateRoomHandler {
     if (alreadyExistingRoom) {
       throw new CannotCreateRoomWithAlreadyTakenNameError(command.name);
     }
-    const room = new Room(command.name, command.mj, command.adventure);
+    const room = new Room(command.name, command.gm, command.adventure);
     this.roomStore.add(room);
     return room.name;
   }

@@ -44,7 +44,7 @@ describe("RoomController", () => {
   });
 
   describe("Room creation", () => {
-    it("should create a room and become an MJ", async () => {
+    it("should create a room and become an GM", async () => {
       const token = getAuthenticatedTokenFor("Joojo");
 
       // Actually use our application, by making a request on the http server in our application
@@ -59,13 +59,13 @@ describe("RoomController", () => {
 
       // Asserting the good behaviour of our system
       const createdRoom = roomStore.load("testingCreationRoom");
-      expect(createdRoom).toMatchObject({ name: "testingCreationRoom", mj: "Joojo" });
+      expect(createdRoom).toMatchObject({ name: "testingCreationRoom", gm: "Joojo" });
     });
 
     it("should not allow to create a room if the name is already taken", async () => {
       const token = getAuthenticatedTokenFor("Joojo");
 
-      const room = new Room("alreadyExistingRoom", "mj", "GreatEscape");
+      const room = new Room("alreadyExistingRoom", "gm", "GreatEscape");
       roomStore.add(room);
 
       const { status } = await request(app.getHttpServer())
@@ -81,7 +81,7 @@ describe("RoomController", () => {
     it("should allow to join a room", async () => {
       const token = getAuthenticatedTokenFor("Cyril");
 
-      const room = new Room("testingJoinRoom", "mjjjj", "GreatEscape");
+      const room = new Room("testingJoinRoom", "gmjjj", "GreatEscape");
       roomStore.add(room);
 
       const { status, text } = await request(app.getHttpServer()).post("/join").set("Authorization", token).send({ room: "testingJoinRoom" });
@@ -95,7 +95,7 @@ describe("RoomController", () => {
     it("should not allow to join a room the user is already in", async () => {
       const token = getAuthenticatedTokenFor("Cyril");
 
-      const room = new Room("alreadyJoinedRoom", "mj", "GreatEscape");
+      const room = new Room("alreadyJoinedRoom", "gm", "GreatEscape");
       room.join("Cyril");
       roomStore.add(room);
 
@@ -119,7 +119,7 @@ describe("RoomController", () => {
     it("should allow an user to leave a room he's in", async () => {
       const token = getAuthenticatedTokenFor("Cyril");
 
-      const room = new Room("testingLeaveRoom", "mj", "GreatEscape");
+      const room = new Room("testingLeaveRoom", "gm", "GreatEscape");
       room.join("Cyril");
       roomStore.add(room);
 
@@ -133,7 +133,7 @@ describe("RoomController", () => {
 
     it("should not allow an user to leave a room he's not in", async () => {
       const token = getAuthenticatedTokenFor("Cyril");
-      const room = new Room("alreadyLeftRoom", "mj", "GreatEscape");
+      const room = new Room("alreadyLeftRoom", "gm", "GreatEscape");
       roomStore.add(room);
 
       const { status } = await request(app.getHttpServer()).post("/leave").set("Authorization", token).send({ room: "alreadyLeftRoom" });
@@ -160,7 +160,7 @@ describe("RoomController", () => {
     }
 
     it("should allow an user to retrieve the players of a room", async () => {
-      const room = new Room("testingGetPlayersRoom", "mj", "GreatEscape");
+      const room = new Room("testingGetPlayersRoom", "gm", "GreatEscape");
       roomStore.add(room);
 
       await checkPlayers(room, []);
@@ -180,8 +180,8 @@ describe("RoomController", () => {
 
   describe("Kicking a player", () => {
     it("should kick a player from a room", async () => {
-      const token = getAuthenticatedTokenFor("mj");
-      const room = new Room("testingKickRoom", "mj", "GreatEscape");
+      const token = getAuthenticatedTokenFor("gm");
+      const room = new Room("testingKickRoom", "gm", "GreatEscape");
       room.join("Cyril");
       roomStore.add(room);
 
@@ -197,9 +197,9 @@ describe("RoomController", () => {
       expect(kickedRoom!.members).toEqual([]);
     });
 
-    it("should fail if the originator of the kick is not the mj of the room", async () => {
-      const token = getAuthenticatedTokenFor("notMj");
-      const room = new Room("testingForbiddenKickRoom", "mj", "GreatEscape");
+    it("should fail if the originator of the kick is not the gm of the room", async () => {
+      const token = getAuthenticatedTokenFor("notGm");
+      const room = new Room("testingForbiddenKickRoom", "gm", "GreatEscape");
       room.join("Cyril");
       roomStore.add(room);
 

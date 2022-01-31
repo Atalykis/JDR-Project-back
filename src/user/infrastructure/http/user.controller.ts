@@ -15,7 +15,7 @@ import { AuthenticateUserHandler } from "../../application/authenticate-user.com
 import { CannotCreateUserWithAlreadyTakenUsernameError, RegisterUserHandler } from "../../application/register-user.command/register-user.command";
 import { AuthGuard } from "../guard/auth.guard";
 
-class registerUserDto {
+class RegisterUserDto {
   @IsString()
   @MinLength(5)
   @MaxLength(15)
@@ -26,12 +26,13 @@ class registerUserDto {
   @MaxLength(30)
   password!: string;
 }
+
 @Controller()
 export class UserController {
   constructor(private readonly registerUserHandler: RegisterUserHandler, private readonly authenticateUserHandler: AuthenticateUserHandler) {}
 
   @Post("/register")
-  registerUser(@Body(ValidationPipe) { username, password }: registerUserDto) {
+  registerUser(@Body(ValidationPipe) { username, password }: RegisterUserDto) {
     try {
       this.registerUserHandler.handle({ username, password });
     } catch (error) {
@@ -48,7 +49,10 @@ export class UserController {
     try {
       return this.authenticateUserHandler.handle({ username, password });
     } catch (error) {
-      throw new UnauthorizedException(error.message);
+      if (error instanceof Error) {
+        throw new UnauthorizedException(error.message);
+      }
+      throw error;
     }
   }
 }

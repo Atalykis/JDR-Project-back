@@ -7,7 +7,7 @@ describe("JoinAdventureCommand", () => {
   it("should allow a User to join a room as a player", () => {
     const command: JoinAdventureCommand = { adventure: "GreatEscape", user: "ZephDio" };
     const adventureStore: AdventureStore = new AdventureStoreInMemory();
-    const adventure = new Adventure("GreatEscape", "mj");
+    const adventure = new Adventure("GreatEscape", "gm");
     adventureStore.add(adventure);
 
     const handler = new JoinAdventureHandler(adventureStore);

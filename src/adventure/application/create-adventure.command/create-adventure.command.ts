@@ -3,7 +3,7 @@ import { AdventureStore } from "../adventure.store";
 
 export interface CreateAdventureCommand {
   name: string;
-  mj: string;
+  gm: string;
 }
 
 export class CreateAdventureHandler {
@@ -14,7 +14,7 @@ export class CreateAdventureHandler {
     if (existing) {
       throw new CannotCreateAdventureWithAlreadyTakenNameError(command.name);
     }
-    const adventure = new Adventure(command.name, command.mj);
+    const adventure = new Adventure(command.name, command.gm);
     this.adventureStore.add(adventure);
   }
 }
