@@ -3,6 +3,7 @@ import { Test } from "@nestjs/testing";
 import request from "supertest";
 import { UserStore } from "../../application/user.store";
 import { User } from "../../domain/user";
+import { FakeTokenManager } from "../token/fake.token-manager";
 import { UserModule } from "../user.module";
 
 describe("UserController", () => {
@@ -10,10 +11,14 @@ describe("UserController", () => {
   let userStore: UserStore;
 
   beforeAll(async () => {
-    const module = await Test.createTestingModule({ imports: [UserModule] }).compile();
+    const module = await Test.createTestingModule({ imports: [UserModule] })
+      .overrideProvider("TokenManager")
+      .useValue(new FakeTokenManager())
+      .compile();
     userStore = module.get<UserStore>("UserStore");
 
     app = module.createNestApplication();
+
     await app.init();
   });
 
@@ -62,6 +67,17 @@ describe("UserController", () => {
       });
 
       expect(status).toBe(HttpStatus.UNAUTHORIZED);
+    });
+  });
+
+  describe("UserInfo", () => {
+    it("should return the user's information", async () => {
+      userStore.register(new User("Jojoo", "superpass"));
+      const { status, text } = await request(app.getHttpServer()).post("/user").send({
+        token: "token=>Jojoo",
+      });
+
+      expect(JSON.parse(text)).toEqual({ name: "Jojoo" });
     });
   });
 });

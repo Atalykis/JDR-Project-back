@@ -1,3 +1,4 @@
+import { TokenManager } from "../token-manager";
 import { UserStore } from "../user.store";
 
 export interface AuthenticateUserCommand {
@@ -6,12 +7,12 @@ export interface AuthenticateUserCommand {
 }
 
 export class AuthenticateUserHandler {
-  constructor(private readonly userStore: UserStore) {}
+  constructor(private readonly userStore: UserStore, private readonly tokenManager: TokenManager) {}
 
   handle(command: AuthenticateUserCommand) {
     const user = this.userStore.load(command.username);
     if (user && user.pass === command.password) {
-      return user.username;
+      return this.tokenManager.generateAccessToken(user);
     } else {
       throw new CannotAuthenticateUserError(command.username);
     }

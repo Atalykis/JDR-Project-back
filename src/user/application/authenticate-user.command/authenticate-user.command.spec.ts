@@ -1,15 +1,17 @@
 import { User } from "../../domain/user";
 import { UserStoreInMemory } from "../../infrastructure/store/user.store.in-memory";
+import { FakeTokenManager } from "../../infrastructure/token/fake.token-manager";
 import { AuthenticateUserCommand, AuthenticateUserHandler } from "./authenticate-user.command";
 
-it("should return the user without password in case of succes", () => {
+it("should return an authentication token in case of success", () => {
   const command: AuthenticateUserCommand = { username: "Aetherall", password: "pass" };
   const userStore = new UserStoreInMemory();
+  const tokenManager = new FakeTokenManager();
   const user = new User("Aetherall", "pass");
   userStore.register(user);
-  const handler = new AuthenticateUserHandler(userStore);
+  const handler = new AuthenticateUserHandler(userStore, tokenManager);
 
-  const username = handler.handle(command);
+  const token = handler.handle(command);
 
-  expect(username).toEqual(user.username);
+  expect(token).toEqual("token=>Aetherall");
 });

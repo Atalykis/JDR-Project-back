@@ -11,4 +11,8 @@ export class UserStoreInMemory implements UserStore {
   register(user: User) {
     this.users.push(user);
   }
+
+  clear() {
+    this.users = [];
+  }
 }
