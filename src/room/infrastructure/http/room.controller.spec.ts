@@ -7,23 +7,9 @@ import { TokenManager } from "../../../user/application/token-manager";
 import { User } from "../../../user/domain/user";
 import { RoomStore } from "../../application/room.store";
 import { UserStore } from "../../../user/application/user.store";
+import { makeGetAuthenticatedToken } from "../../../user/test/authenticated-token";
 
 // E2E
-
-function makeGetAuthenticatedToken(module: TestingModule) {
-  const userStore = module.get<UserStore>("UserStore");
-  const tokenManager = module.get<TokenManager>("TokenManager");
-
-  return function getAuthenticatedTokenFor(username: string) {
-    let user = userStore.load(username);
-    if (!user) {
-      user = new User(username, "password");
-      userStore.register(user);
-    }
-
-    return tokenManager.generateAccessToken(user);
-  };
-}
 
 describe("RoomController", () => {
   let app: INestApplication;

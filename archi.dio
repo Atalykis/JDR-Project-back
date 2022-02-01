@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="JWcEibsBTAhS4DX4xp7o" name="Auth">
-        <mxGraphModel dx="1273" dy="683" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+        <mxGraphModel dx="320" dy="649" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -193,7 +193,7 @@
         </mxGraphModel>
     </diagram>
     <diagram id="DaVFQSgEwYpj2RYMkDh4" name="Domain">
-        <mxGraphModel dx="2123" dy="683" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+        <mxGraphModel dx="1170" dy="649" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
             <root>
                 <mxCell id="pWA5wYfXyb2I-tvQPeaQ-0"/>
                 <mxCell id="pWA5wYfXyb2I-tvQPeaQ-1" parent="pWA5wYfXyb2I-tvQPeaQ-0"/>

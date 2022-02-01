@@ -18,6 +18,7 @@ export class CreateCharacterHandler {
     }
     const character = new Character(command.name, command.user, command.adventure);
     this.characterStore.add(character);
+    return character.name;
   }
 }
 
