@@ -70,22 +70,29 @@ describe("RoomController", () => {
       const room = new Room("testingJoinRoom", "gmjjj", "GreatEscape");
       roomStore.add(room);
 
-      const { status, text } = await request(app.getHttpServer()).post("/join").set("Authorization", token).send({ room: "testingJoinRoom" });
+      const { status, text } = await request(app.getHttpServer())
+        .post("/join")
+        .set("Authorization", token)
+        .send({ room: "testingJoinRoom", character: { name: "Jojoo", owner: "Cyril", description: "description", adventure: "TheGreatEscape" } });
 
       expect({ status, text }).toMatchObject({ status: HttpStatus.NO_CONTENT, text: "" });
 
       const joinedRoom = roomStore.load("testingJoinRoom");
       expect(joinedRoom!.members).toEqual(["Cyril"]);
+      expect(joinedRoom!.adventurers).toEqual([{ name: "Jojoo", owner: "Cyril", description: "description", adventure: "TheGreatEscape" }]);
     });
 
     it("should not allow to join a room the user is already in", async () => {
       const token = getAuthenticatedTokenFor("Cyril");
 
       const room = new Room("alreadyJoinedRoom", "gm", "GreatEscape");
-      room.join("Cyril");
+      room.join("Cyril", { name: "Jojoo", owner: "Cyril", description: "description", adventure: "TheGreatEscape" });
       roomStore.add(room);
 
-      const { status } = await request(app.getHttpServer()).post("/join").set("Authorization", token).send({ room: "alreadyJoinedRoom" });
+      const { status } = await request(app.getHttpServer())
+        .post("/join")
+        .set("Authorization", token)
+        .send({ room: "alreadyJoinedRoom", character: { name: "Jojoo", owner: "Cyril", description: "description", adventure: "TheGreatEscape" } });
 
       expect(status).toBe(HttpStatus.CONFLICT);
 
@@ -96,7 +103,10 @@ describe("RoomController", () => {
     it("should not allow to join a non-existing room", async () => {
       const token = getAuthenticatedTokenFor("Cyril");
 
-      const { status } = await request(app.getHttpServer()).post("/join").set("Authorization", token).send({ room: "nonExistingRoom" });
+      const { status } = await request(app.getHttpServer())
+        .post("/join")
+        .set("Authorization", token)
+        .send({ room: "nonExistingRoom", character: { name: "Jojoo", owner: "Cyril", description: "description", adventure: "TheGreatEscape" } });
       expect(status).toBe(HttpStatus.NOT_FOUND);
     });
   });
@@ -106,7 +116,7 @@ describe("RoomController", () => {
       const token = getAuthenticatedTokenFor("Cyril");
 
       const room = new Room("testingLeaveRoom", "gm", "GreatEscape");
-      room.join("Cyril");
+      room.join("Cyril", { name: "Jojoo", owner: "Cyril", description: "description", adventure: "TheGreatEscape" });
       roomStore.add(room);
 
       const { status } = await request(app.getHttpServer()).post("/leave").set("Authorization", token).send({ room: "testingLeaveRoom" });
@@ -151,10 +161,10 @@ describe("RoomController", () => {
 
       await checkPlayers(room, []);
 
-      room.join("Cyril");
+      room.join("Cyril", { name: "Jojoo", owner: "Cyril", description: "description", adventure: "TheGreatEscape" });
       await checkPlayers(room, ["Cyril"]);
 
-      room.join("Nico");
+      room.join("Nico", { name: "Jojoo", owner: "Cyril", description: "description", adventure: "TheGreatEscape" });
       await checkPlayers(room, ["Cyril", "Nico"]);
     });
 
@@ -168,7 +178,7 @@ describe("RoomController", () => {
     it("should kick a player from a room", async () => {
       const token = getAuthenticatedTokenFor("gm");
       const room = new Room("testingKickRoom", "gm", "GreatEscape");
-      room.join("Cyril");
+      room.join("Cyril", { name: "Jojoo", owner: "Cyril", description: "description", adventure: "TheGreatEscape" });
       roomStore.add(room);
 
       const { status, text } = await request(app.getHttpServer())
@@ -186,7 +196,7 @@ describe("RoomController", () => {
     it("should fail if the originator of the kick is not the gm of the room", async () => {
       const token = getAuthenticatedTokenFor("notGm");
       const room = new Room("testingForbiddenKickRoom", "gm", "GreatEscape");
-      room.join("Cyril");
+      room.join("Cyril", { name: "Jojoo", owner: "Cyril", description: "description", adventure: "TheGreatEscape" });
       roomStore.add(room);
 
       const { status } = await request(app.getHttpServer())

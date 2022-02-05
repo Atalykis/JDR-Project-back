@@ -10,8 +10,8 @@ describe("GetRoomPlayersQuery", () => {
     const handler = new GetRoomPlayersHandler(roomStore);
     const room = new Room("palais", "Gm", "GreatEscape");
     roomStore.add(room);
-    room.join("Cyril");
-    room.join("Nico");
+    room.join("Cyril", { name: "Jojoo", owner: "Cyril", description: "description", adventure: "GreatEscape" });
+    room.join("Nico", { name: "oojoJ", owner: "Nico", description: "noitpircsed", adventure: "GreatEscape" });
 
     const response = handler.handle(query);
 

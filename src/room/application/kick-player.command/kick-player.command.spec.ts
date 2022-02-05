@@ -20,7 +20,7 @@ describe("KickPlayerCommand", () => {
   it("should remove a player from the room", () => {
     const room = new Room("aRoom", "gm", "GreatEscape");
     const player = new User("Cyril", "password");
-    room.join(player.username);
+    room.join(player.username, { name: "Jojoo", owner: "Cyril", description: "description", adventure: "GreatEscape" });
     roomStore.add(room);
 
     const command: KickPlayerCommand = { room: room.name, player: player.username, originator: "gm" };
@@ -50,7 +50,7 @@ describe("KickPlayerCommand", () => {
   it("should fail if the originator of the kick is not the gm", () => {
     const room = new Room("aRoom", "gm", "GreatEscape");
     const player = new User("Cyril", "password");
-    room.join(player.username);
+    room.join(player.username, { name: "Jojoo", owner: "Cyril", description: "description", adventure: "GreatEscape" });
     roomStore.add(room);
 
     const command: KickPlayerCommand = { room: room.name, player: player.username, originator: "notGm" };

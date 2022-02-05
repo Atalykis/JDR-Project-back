@@ -30,7 +30,7 @@ describe("CharcterController", () => {
       const { status, text } = await request(app.getHttpServer())
         .post("/character")
         .set("Authorization", token)
-        .send({ name: "JojoO", adventure: "TheGreatEscape" });
+        .send({ name: "JojoO", description: "You were exptecting a description, but it was me DIO", adventure: "TheGreatEscape" });
 
       expect(status).toBe(HttpStatus.CREATED);
       expect(text).toBe("JojoO");
@@ -40,8 +40,8 @@ describe("CharcterController", () => {
   describe("Character retrieval", () => {
     it("should allow a user to retrieve his characters in an Adventure", async () => {
       const token = getAuthenticatedTokenFor("Atalykis");
-      const main = new Character("Jojoo", "Atalykis", "TheGreatEscape");
-      const smurf = new Character("oojoJ", "Atalykis", "TheGreatEscape");
+      const main = new Character("Jojoo", "Atalykis", "description", "TheGreatEscape");
+      const smurf = new Character("oojoJ", "Atalykis", "noitpircsed", "TheGreatEscape");
       characterStore.add(main);
       characterStore.add(smurf);
 
@@ -53,8 +53,8 @@ describe("CharcterController", () => {
       expect(status).toBe(HttpStatus.OK);
       expect(body).toEqual(
         expect.arrayContaining([
-          { name: "Jojoo", owner: "Atalykis", adventure: "TheGreatEscape" },
-          { name: "oojoJ", owner: "Atalykis", adventure: "TheGreatEscape" },
+          { name: "Jojoo", owner: "Atalykis", description: "description", adventure: "TheGreatEscape" },
+          { name: "oojoJ", owner: "Atalykis", description: "noitpircsed", adventure: "TheGreatEscape" },
         ])
       );
     });

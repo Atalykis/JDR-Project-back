@@ -58,9 +58,33 @@ class KickPlayerDto {
   room!: string;
 }
 
-class GetRoomPlayersDto extends RoomInputDto {}
+class CharacterInputDto {
+  @IsString()
+  @MinLength(5)
+  @MaxLength(30)
+  name!: string;
 
-class JoinRoomInputDto extends RoomInputDto {}
+  @IsString()
+  @MinLength(5)
+  @MaxLength(30)
+  owner!: string;
+
+  @IsString()
+  @MinLength(5)
+  @MaxLength(200)
+  description!: string;
+
+  @IsString()
+  @MinLength(5)
+  @MaxLength(30)
+  adventure!: string;
+}
+
+class JoinRoomInputDto extends RoomInputDto {
+  character: CharacterInputDto;
+}
+
+class GetRoomPlayersDto extends RoomInputDto {}
 
 class LeaveRoomInputDto extends RoomInputDto {}
 
@@ -90,9 +114,9 @@ export class RoomController {
   @UseGuards(AuthGuard)
   @Post("/join")
   @HttpCode(HttpStatus.NO_CONTENT)
-  joinRoom(@Body(ValidationPipe) { room }: JoinRoomInputDto, @Username() user: string) {
+  joinRoom(@Body(ValidationPipe) { room, character }: JoinRoomInputDto, @Username() user: string) {
     try {
-      this.joinRoomHandler.handle({ room, user });
+      this.joinRoomHandler.handle({ room, user, character });
     } catch (error) {
       if (error instanceof CannotJoinAleadyJoinedRoomError) {
         throw new ConflictException(error.message);

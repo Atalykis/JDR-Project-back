@@ -3,8 +3,12 @@ import { Character } from "../domain/character";
 
 export class CharacterStoreInMemory implements CharacterStore {
   characters: Character[] = [
-    { name: "Jojoo", owner: "Atalykis", adventure: "TheBizarreAdventure" },
-    { name: "Dio", owner: "Atalykis", adventure: "TheBizarreAdventure" },
+    { name: "Jojoo", owner: "Atalykis", description: "Jeune homme très très viril", adventure: "TheBizarreAdventure" },
+    { name: "Dio", owner: "Atalykis", description: "You were exptecting a description, but it was me DIO", adventure: "TheBizarreAdventure" },
+    { name: "Jojoo", owner: "Zeph0", description: "Jeune homme très très viril", adventure: "TheBizarreAdventure" },
+    { name: "Dio", owner: "Zeph0", description: "You were exptecting a description, but it was me DIO", adventure: "TheBizarreAdventure" },
+    { name: "Jojoo", owner: "Aetherall", description: "Jeune homme très très viril", adventure: "TheBizarreAdventure" },
+    { name: "Dio", owner: "Aetherall", description: "You were exptecting a description, but it was me DIO", adventure: "TheBizarreAdventure" },
   ];
 
   add(character: Character) {

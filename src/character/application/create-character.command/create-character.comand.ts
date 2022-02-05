@@ -4,6 +4,7 @@ import { CharacterStore } from "../character.store";
 export interface CreateCharacterCommand {
   name: string;
   user: string;
+  description: string;
   adventure: string;
 }
 
@@ -16,7 +17,7 @@ export class CreateCharacterHandler {
     if (existing) {
       throw new CannotCreateCharacterWithAlreadyTakenNameForUserError(command.user, command.name);
     }
-    const character = new Character(command.name, command.user, command.adventure);
+    const character = new Character(command.name, command.user, command.description, command.adventure);
     this.characterStore.add(character);
     return character.name;
   }

@@ -15,6 +15,11 @@ class CreateCharacterDto {
 
   @IsString()
   @MinLength(5)
+  @MaxLength(200)
+  description!: string;
+
+  @IsString()
+  @MinLength(5)
   @MaxLength(30)
   adventure!: string;
 }
@@ -33,9 +38,9 @@ export class CharacterController {
   @UseGuards(AuthGuard)
   @Post("/character")
   @HttpCode(HttpStatus.CREATED)
-  createCharacter(@Body(ValidationPipe) { name, adventure }: CreateCharacterDto, @Username() username: string) {
+  createCharacter(@Body(ValidationPipe) { name, description, adventure }: CreateCharacterDto, @Username() username: string) {
     try {
-      return this.createCharacterHandler.handle({ name, user: username, adventure });
+      return this.createCharacterHandler.handle({ name, user: username, description, adventure });
     } catch (error) {
       if (error instanceof CannotCreateCharacterWithAlreadyTakenNameForUserError) {
         throw new ConflictException(error.message);
