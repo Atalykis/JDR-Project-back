@@ -9,6 +9,7 @@ export class GetCharactersHandler {
   constructor(public readonly characterStore: CharacterStore) {}
 
   handle(query: GetCharactersQuery) {
-    return this.characterStore.loadOwnedForAdventure(query.owner, query.adventure);
+    const result = this.characterStore.loadOwnedForAdventure(query.owner, query.adventure);
+    return result;
   }
 }

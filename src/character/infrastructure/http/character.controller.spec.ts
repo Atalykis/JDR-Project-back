@@ -40,8 +40,8 @@ describe("CharcterController", () => {
   describe("Character retrieval", () => {
     it("should allow a user to retrieve his characters in an Adventure", async () => {
       const token = getAuthenticatedTokenFor("Atalykis");
-      const main = new Character("Jojoo", "Atalykis", "description", "TheGreatEscape");
-      const smurf = new Character("oojoJ", "Atalykis", "noitpircsed", "TheGreatEscape");
+      const main = new Character("Jojoo", "Atalykis", "TheGreatEscape", "description");
+      const smurf = new Character("oojoJ", "Atalykis", "TheGreatEscape", "noitpircsed");
       characterStore.add(main);
       characterStore.add(smurf);
 
@@ -51,12 +51,7 @@ describe("CharcterController", () => {
         .query({ adventure: "TheGreatEscape" });
 
       expect(status).toBe(HttpStatus.OK);
-      expect(body).toEqual(
-        expect.arrayContaining([
-          { name: "Jojoo", owner: "Atalykis", description: "description", adventure: "TheGreatEscape" },
-          { name: "oojoJ", owner: "Atalykis", description: "noitpircsed", adventure: "TheGreatEscape" },
-        ])
-      );
+      expect(body).toEqual(expect.arrayContaining([main, smurf]));
     });
   });
 });

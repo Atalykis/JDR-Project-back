@@ -14,6 +14,9 @@ export class AuthGuard implements CanActivate {
 
   canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest();
+    if (!request) {
+      throw new Error("IMPLEMENT GRAPHQL CONTEXT IN AUTH GUARD");
+    }
     if (request.headers.authorization) {
       try {
         const username = this.tokenManager.getUsernameFromAccessToken(request.headers.authorization);

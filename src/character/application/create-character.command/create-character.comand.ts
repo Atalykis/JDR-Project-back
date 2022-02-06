@@ -1,4 +1,4 @@
-import { Character } from "../../domain/character";
+import { Character, CharacterIdentity } from "../../domain/character";
 import { CharacterStore } from "../character.store";
 
 export interface CreateCharacterCommand {
@@ -12,12 +12,11 @@ export class CreateCharacterHandler {
   constructor(private readonly characterStore: CharacterStore) {}
 
   handle(command: CreateCharacterCommand) {
-    const existing = this.characterStore.load(command.user, command.name);
-
+    const existing = this.characterStore.load(new CharacterIdentity(command.name, command.user, command.adventure));
     if (existing) {
       throw new CannotCreateCharacterWithAlreadyTakenNameForUserError(command.user, command.name);
     }
-    const character = new Character(command.name, command.user, command.description, command.adventure);
+    const character = new Character(command.name, command.user, command.adventure, command.description);
     this.characterStore.add(character);
     return character.name;
   }

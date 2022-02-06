@@ -1,9 +1,10 @@
+import { CharacterIdentity } from "../../../character/domain/character";
 import { RoomStore } from "../room.store";
 
 export interface JoinRoomCommand {
   room: string;
   user: string;
-  character: { name: string; owner: string; description: string; adventure: string };
+  character: CharacterIdentity;
 }
 
 export class JoinRoomHandler {
@@ -17,6 +18,7 @@ export class JoinRoomHandler {
     if (room.has(command.user)) {
       throw new CannotJoinAleadyJoinedRoomError(command.user);
     }
+
     room.join(command.user, command.character);
   }
 }

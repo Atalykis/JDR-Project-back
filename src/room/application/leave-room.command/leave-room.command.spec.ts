@@ -1,3 +1,4 @@
+import { CharacterIdentity } from "../../../character/domain/character";
 import { Room } from "../../domain/room";
 import { RoomStoreInMemory } from "../../infrastructure/store/room.store.in-memory";
 import { RoomStore } from "../room.store";
@@ -9,7 +10,7 @@ describe("LeaveRoomCommand", () => {
     const roomStore: RoomStore = new RoomStoreInMemory();
     const room = new Room("hall", "gm", "GreatEscape");
     roomStore.add(room);
-    room.join("Cyril", { name: "Jojoo", owner: "Cyril", description: "description", adventure: "GreatEscape" });
+    room.join("Cyril", new CharacterIdentity("Jojoo", "Cyril", "GreatEscape"));
 
     expect(room.members).toEqual(["Cyril"]);
     const handler = new LeaveRoomHandler(roomStore);

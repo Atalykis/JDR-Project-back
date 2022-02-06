@@ -1,3 +1,4 @@
+import { CharacterIdentity } from "../../../character/domain/character";
 import { Room } from "../../domain/room";
 import { RoomStoreInMemory } from "../../infrastructure/store/room.store.in-memory";
 import { RoomStore } from "../room.store";
@@ -10,8 +11,8 @@ describe("GetRoomPlayersQuery", () => {
     const handler = new GetRoomPlayersHandler(roomStore);
     const room = new Room("palais", "Gm", "GreatEscape");
     roomStore.add(room);
-    room.join("Cyril", { name: "Jojoo", owner: "Cyril", description: "description", adventure: "GreatEscape" });
-    room.join("Nico", { name: "oojoJ", owner: "Nico", description: "noitpircsed", adventure: "GreatEscape" });
+    room.join("Cyril", new CharacterIdentity("Jojoo", "Cyril", "GreatEscape"));
+    room.join("Nico", new CharacterIdentity("oojoJ", "Nico", "GreatEscape"));
 
     const response = handler.handle(query);
 

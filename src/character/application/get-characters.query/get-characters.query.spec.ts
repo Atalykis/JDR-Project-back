@@ -7,9 +7,9 @@ describe("GetCharactersQuery", () => {
     const characterStore = new CharacterStoreInMemory();
     const handler = new GetCharactersHandler(characterStore);
 
-    const mainCharacter = new Character("Jojoo", "Atalykis", "Jeune homme très très viril", "TheGreatEscape");
+    const mainCharacter = new Character("Jojoo", "Atalykis", "TheGreatEscape", "Jeune homme très très viril");
     characterStore.add(mainCharacter);
-    const secondaryCharacter = new Character("Dio", "Atalykis", "Vieil homme très très mort", "TheGreatEscape");
+    const secondaryCharacter = new Character("Dio", "Atalykis", "TheGreatEscape", "Vieil homme très très mort");
     characterStore.add(secondaryCharacter);
 
     const query: GetCharactersQuery = { owner: "Atalykis", adventure: "TheGreatEscape" };

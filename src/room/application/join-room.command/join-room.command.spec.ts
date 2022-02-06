@@ -1,3 +1,4 @@
+import { CharacterIdentity } from "../../../character/domain/character";
 import { Room } from "../../domain/room";
 import { RoomStoreInMemory } from "../../infrastructure/store/room.store.in-memory";
 import { RoomStore } from "../room.store";
@@ -8,7 +9,7 @@ describe("JoinRoomCommand", () => {
     const command: JoinRoomCommand = {
       user: "Cyril",
       room: "everyone",
-      character: { name: "Jojoo", owner: "Cyril", description: "description", adventure: "GreatEscape" },
+      character: new CharacterIdentity("Jojoo", "Cyril", "GreatEscape"),
     };
     const roomStore: RoomStore = new RoomStoreInMemory();
     const room = new Room("everyone", "gm", "GreatEscape");
@@ -19,19 +20,19 @@ describe("JoinRoomCommand", () => {
     handler.handle(command);
 
     expect(room.members).toEqual(["Cyril"]);
-    expect(room.adventurers).toEqual([{ name: "Jojoo", owner: "Cyril", adventure: "GreatEscape", description: "description" }]);
+    expect(room.adventurers).toEqual([{ name: "Jojoo", owner: "Cyril", adventure: "GreatEscape" }]);
   });
 
   it("should not allow an user to join a room he already joined", () => {
     const command: JoinRoomCommand = {
       user: "Cyril",
       room: "noone",
-      character: { name: "Jojoo", owner: "Cyril", description: "description", adventure: "GreatEscape" },
+      character: new CharacterIdentity("Jojoo", "Cyril", "GreatEscape"),
     };
     const roomStore = new RoomStoreInMemory();
     const room = new Room("noone", "gm", "GreatEscape");
     roomStore.add(room);
-    room.join("Cyril", { name: "Jojoo", owner: "Cyril", description: "description", adventure: "GreatEscape" });
+    room.join("Cyril", new CharacterIdentity("Jojoo", "Cyril", "GreatEscape"));
 
     const handler = new JoinRoomHandler(roomStore);
 
@@ -42,7 +43,7 @@ describe("JoinRoomCommand", () => {
     const command: JoinRoomCommand = {
       user: "Cyril",
       room: "noone",
-      character: { name: "Jojoo", owner: "Cyril", description: "description", adventure: "noone" },
+      character: new CharacterIdentity("Jojoo", "Cyril", "noone"),
     };
     const roomStore = new RoomStoreInMemory();
 

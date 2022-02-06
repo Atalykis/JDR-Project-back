@@ -1,0 +1,22 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Character {
+  name: String!
+  owner: String!
+  adventure: String!
+  description: String!
+}
+
+type Room {
+  name: String!
+  gm: String!
+  adventure: String!
+  characters: [Character!]!
+}
+
+type Query {
+  room(name: String!): Room!
+  characters(adventure: String!, owner: String!): [Character!]!
+}

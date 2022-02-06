@@ -12,6 +12,7 @@ import {
   ValidationPipe,
 } from "@nestjs/common";
 import { IsString, MinLength, MaxLength } from "class-validator";
+import { CharacterIdentity } from "../../../character/domain/character";
 import { AuthGuard, Username } from "../../../user/infrastructure/guard/auth.guard";
 import { CannotCreateRoomWithAlreadyTakenNameError, CreateRoomHandler } from "../../application/create-room.command/create-room.command";
 import { CannotGetPlayersOfNonExistingRoom, GetRoomPlayersHandler } from "../../application/get-room-players.query/get-room-players.query";
@@ -71,17 +72,12 @@ class CharacterInputDto {
 
   @IsString()
   @MinLength(5)
-  @MaxLength(200)
-  description!: string;
-
-  @IsString()
-  @MinLength(5)
   @MaxLength(30)
   adventure!: string;
 }
 
 class JoinRoomInputDto extends RoomInputDto {
-  character: CharacterInputDto;
+  character: CharacterIdentity;
 }
 
 class GetRoomPlayersDto extends RoomInputDto {}

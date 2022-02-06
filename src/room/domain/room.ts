@@ -1,8 +1,8 @@
-import { Character } from "../../character/domain/character";
+import { CharacterIdentity } from "../../character/domain/character";
 
 export class Room {
   public users: Set<string>;
-  public characters: Set<Character>;
+  public characters: Set<CharacterIdentity>;
   constructor(public readonly name: string, public readonly gm: string, public readonly adventure: string) {
     this.users = new Set();
     this.characters = new Set();
@@ -12,7 +12,7 @@ export class Room {
     return this.users.has(user);
   }
 
-  join(user: string, character: Character): void {
+  join(user: string, character: CharacterIdentity): void {
     this.users.add(user);
     this.characters.add(character);
   }
@@ -29,7 +29,7 @@ export class Room {
     return [...this.users];
   }
 
-  get adventurers(): Character[] {
+  get adventurers(): CharacterIdentity[] {
     return [...this.characters];
   }
 }
