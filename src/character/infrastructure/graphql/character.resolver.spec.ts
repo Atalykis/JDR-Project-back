@@ -7,7 +7,7 @@ import { BackendModule } from "../../../backend.module";
 import { INestApplication } from "@nestjs/common";
 import { CharacterStore } from "../../application/character.store";
 import request from "supertest";
-import { GraphqlTestClient } from "../../../test/graphql.test-client.spec";
+import { GraphqlTestClient } from "../../../test/graphql.test-client";
 
 describe("Character Resolver", () => {
   let app: INestApplication;
@@ -27,6 +27,7 @@ describe("Character Resolver", () => {
     await app.init();
 
     graphql = new GraphqlTestClient(app);
+    graphql.as("Atalykis");
   });
 
   afterAll(async () => {
@@ -34,9 +35,9 @@ describe("Character Resolver", () => {
   });
 
   describe("Query characters", () => {
-    const GetOwnedCharacters = (owner: string, adventure: string) => gql`
+    const GetOwnedCharacters = (adventure: string) => gql`
     query GetOwnedCharacters {
-      characters(owner: "${owner}", adventure: "${adventure}"){
+      characters(adventure: "${adventure}"){
         name
         owner
         adventure
@@ -54,7 +55,7 @@ describe("Character Resolver", () => {
       characterStore.add(dio);
       characterStore.add(notOwned);
 
-      const { errors, data } = await graphql.execute(GetOwnedCharacters("Atalykis", "TheGreatEscape"));
+      const { errors, data } = await graphql.execute(GetOwnedCharacters("TheGreatEscape"));
 
       expect(errors).toBeUndefined();
       expect(data).toEqual({

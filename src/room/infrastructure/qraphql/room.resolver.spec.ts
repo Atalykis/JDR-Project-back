@@ -1,7 +1,7 @@
 import { INestApplication } from "@nestjs/common";
 import { Test } from "@nestjs/testing";
 import { BackendModule } from "../../../backend.module";
-import { GraphqlTestClient } from "../../../test/graphql.test-client.spec";
+import { GraphqlTestClient } from "../../../test/graphql.test-client";
 import { RoomStoreInMemory } from "../store/room.store.in-memory";
 import { gql } from "apollo-server-express";
 import { CharacterFixtures } from "../../../character/domain/character.builder";

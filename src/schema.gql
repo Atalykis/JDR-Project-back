@@ -18,5 +18,5 @@ type Room {
 
 type Query {
   room(name: String!): Room!
-  characters(adventure: String!, owner: String!): [Character!]!
+  characters(adventure: String!): [Character!]!
 }

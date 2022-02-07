@@ -18,7 +18,6 @@ class RoomType {
   adventure: string;
 }
 
-@UseGuards(AuthGuard)
 @Resolver(() => RoomType)
 export class RoomResolver {
   constructor(

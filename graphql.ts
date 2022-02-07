@@ -75,3 +75,44 @@
 //   const characterIdentities = await this.getCharactersInRoomHandler(room.name)
 //   return Promise.all(characterIdentities.map(id => this.characterStore.load(id))
 // }
+
+// const res = {
+//   Query: {
+//     cats() {},
+//   },
+//   Mutation: {},
+//   Subscription: {},
+//   Cat: {},
+// };
+
+// @ObjectType("Cat") // type Cat { name: Float! }
+// class CatType {
+//   @Field()
+//   name: number;
+// }
+
+//
+//  query { cats { name } }
+//  mutation { create { name } }
+//
+
+// @Resolver(() => CatType)
+// class CatResolver {
+//   store: { name: number }[] = [{ name: 1 }, { name: 2 }];
+
+//   @ResolveField(() => Number)
+//   doubled(@Parent() cat: CatType) {
+//     return cat.name * 2;
+//   }
+
+//   @Mutation(() => [CatType]) // type Mutation { create: Boolean  }
+//   create() {
+//     this.store.push({ name: Math.random() });
+//     return this.store;
+//   }
+
+//   @Query(() => [CatType])
+//   cats() {
+//     return this.store;
+//   }
+// }
