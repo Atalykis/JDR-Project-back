@@ -16,7 +16,45 @@ type Room {
   characters: [Character!]!
 }
 
+type PointType {
+  x: Float!
+  y: Float!
+}
+
+type LineType {
+  color: String!
+  thickness: Float!
+  points: [PointType!]!
+}
+
+type BoardType {
+  roomName: String!
+  lines: [LineType!]!
+}
+
+type Adventure {
+  name: String!
+  gm: String!
+}
+
+input PointInput {
+  x: Float!
+  y: Float!
+}
+
+input LineInput {
+  color: String!
+  thickness: Float!
+  points: [PointInput!]!
+}
+
 type Query {
+  adventures: [Adventure!]!
   room(name: String!): Room!
   characters(adventure: String!): [Character!]!
+  board(roomName: String!): BoardType!
+}
+
+type Mutation {
+  draw(line: LineInput!, roomName: String!): BoardType!
 }

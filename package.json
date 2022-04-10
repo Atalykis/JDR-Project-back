@@ -16,22 +16,30 @@
     "typescript": "^4.3.2"
   },
   "dependencies": {
+    "@ddd-ts/value": "^0.0.6",
     "@nestjs/common": "^7.6.17",
     "@nestjs/core": "^7.6.17",
     "@nestjs/graphql": "^9.1.2",
     "@nestjs/passport": "^7.1.5",
     "@nestjs/platform-express": "^7.6.17",
+    "@nestjs/platform-socket.io": "^8.4.3",
+    "@nestjs/websockets": "^8.4.3",
+    "@types/socket.io-client": "^3.0.0",
     "apollo-server-express": "^3.6.2",
     "class-transformer": "^0.4.0",
     "class-validator": "^0.13.1",
     "cryptr": "^6.0.2",
     "graphql": "^15",
+    "graphql-subscriptions": "^2.0.0",
+    "graphql-ws": "^5.6.2",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.1.0"
+    "rxjs": "^7.5.5",
+    "socket.io-client": "^4.4.1"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "start": "ts-node src/index.ts"
   }
 }

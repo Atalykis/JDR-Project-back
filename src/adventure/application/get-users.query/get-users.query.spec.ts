@@ -3,7 +3,7 @@ import { AdventureStoreInMemory } from "../../infrastructure/adventure.store.in-
 import { GetUsersQuery, GetUsersHandler, CannotGetUsersOfNonExistingAdventureError } from "./get-users.query";
 
 describe("get users names query", () => {
-  it("should get all names of character from an adventure", () => {
+  it("should get all names of character from an adventure", async () => {
     const query: GetUsersQuery = { adventure: "GreatEscape" };
     const adventureStore = new AdventureStoreInMemory();
     const adventure = new Adventure("GreatEscape", "gm");
@@ -12,16 +12,16 @@ describe("get users names query", () => {
 
     const handler = new GetUsersHandler(adventureStore);
 
-    const users = handler.handle(query);
+    const users = await handler.handle(query);
     expect(users).toEqual(["Aetherall"]);
   });
 
-  it("should fail if the adventure doesn't exist", () => {
+  it("should fail if the adventure doesn't exist", async () => {
     const query: GetUsersQuery = { adventure: "GreatEscape" };
     const adventureStore = new AdventureStoreInMemory();
 
     const handler = new GetUsersHandler(adventureStore);
 
-    expect(() => handler.handle(query)).toThrow(CannotGetUsersOfNonExistingAdventureError);
+    await expect(() => handler.handle(query)).rejects.toThrow(CannotGetUsersOfNonExistingAdventureError);
   });
 });

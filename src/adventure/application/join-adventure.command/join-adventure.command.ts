@@ -8,8 +8,8 @@ export interface JoinAdventureCommand {
 export class JoinAdventureHandler {
   constructor(private readonly adventureStore: AdventureStore) {}
 
-  handle(command: JoinAdventureCommand) {
-    const adventure = this.adventureStore.load(command.adventure);
+  async handle(command: JoinAdventureCommand) {
+    const adventure = await this.adventureStore.load(command.adventure);
     if (!adventure) {
       throw new CannotJoinNonExistingAdventureError(command.adventure);
     }

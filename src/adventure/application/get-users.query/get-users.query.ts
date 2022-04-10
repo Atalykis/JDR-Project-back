@@ -7,8 +7,8 @@ export type GetUsersQuery = {
 export class GetUsersHandler {
   constructor(private readonly adventureStore: AdventureStore) {}
 
-  handle(query: GetUsersQuery) {
-    const adventure = this.adventureStore.load(query.adventure);
+  async handle(query: GetUsersQuery) {
+    const adventure = await this.adventureStore.load(query.adventure);
     if (!adventure) {
       throw new CannotGetUsersOfNonExistingAdventureError(query.adventure);
     }

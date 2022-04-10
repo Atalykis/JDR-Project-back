@@ -9,13 +9,13 @@ export interface CreateAdventureCommand {
 export class CreateAdventureHandler {
   constructor(private readonly adventureStore: AdventureStore) {}
 
-  handle(command: CreateAdventureCommand) {
-    const existing = this.adventureStore.load(command.name);
+  async handle(command: CreateAdventureCommand) {
+    const existing = await this.adventureStore.load(command.name);
     if (existing) {
       throw new CannotCreateAdventureWithAlreadyTakenNameError(command.name);
     }
     const adventure = new Adventure(command.name, command.gm);
-    this.adventureStore.add(adventure);
+    await this.adventureStore.add(adventure);
   }
 }
 

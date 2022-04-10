@@ -4,13 +4,21 @@ import { GraphQLModule, Resolver, Query, Mutation, ObjectType, Field, ResolveFie
 import { UserModule } from "./user/infrastructure/user.module";
 import { RoomModule } from "./room/infrastructure/room.module";
 import { CharacterModule } from "./character/character.module";
+import { BoardModule } from "./board/infrastructure/board.module";
+import { AdventureModule } from "./adventure/adventure.module";
 
 @Module({
   imports: [
+    AdventureModule,
     UserModule,
     RoomModule,
     CharacterModule,
+    BoardModule,
     GraphQLModule.forRoot({
+      installSubscriptionHandlers: true,
+      // subscriptions: {
+      //   "graphql-ws": true,
+      // },
       autoSchemaFile: __dirname + "/schema.gql",
     }),
   ],

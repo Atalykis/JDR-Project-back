@@ -9,12 +9,12 @@ Done:
 - As a User, I want to become a Player in a room I joined
 - As a GM, I want to kick a Player in my room
 - As a User I want to create a character
+- As a User, I want to join an Adventure as Player
+- As a Player/GM, I want to insert Character(s) inside of an Adventure
+
 - As a User, I want to create an Adventure as GM
 
 Pending:
-
-- As a User, I want to join an Adventure as Player
-- As a Player/GM, I want to insert Character(s) inside of an Adventure
 
 Delayed:
 
