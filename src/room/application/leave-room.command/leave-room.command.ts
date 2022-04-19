@@ -8,8 +8,8 @@ export interface LeaveRoomCommand {
 export class LeaveRoomHandler {
   constructor(private readonly roomStore: RoomStore) {}
 
-  handle(command: LeaveRoomCommand) {
-    const room = this.roomStore.load(command.room);
+  async handle(command: LeaveRoomCommand) {
+    const room = await this.roomStore.load(command.room);
     if (!room) {
       throw new CannotLeaveUnexistingRoomError(command.user);
     }

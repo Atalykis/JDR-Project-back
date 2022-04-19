@@ -3,8 +3,14 @@ import { Adventure } from "../domain/adventure";
 import { AdventureFixtures } from "../domain/adventure.builder";
 
 export class AdventureStoreInMemory implements AdventureStore {
-  adventures: Adventure[] = [AdventureFixtures.greatEscape, AdventureFixtures.basicAdventure];
+  adventures: Adventure[] = [AdventureFixtures.basicAdventure, AdventureFixtures.greatEscape];
+  async init() {
+    this.adventures = [AdventureFixtures.basicAdventure, AdventureFixtures.greatEscape];
+  }
 
+  async onModuleInit() {
+    await this.init();
+  }
   async add(adventure: Adventure) {
     this.adventures.push(adventure);
   }

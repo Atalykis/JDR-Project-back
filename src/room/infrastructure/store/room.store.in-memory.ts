@@ -1,15 +1,30 @@
 import { RoomStore } from "../../application/room.store";
 import { Room } from "../../domain/room";
+import { RoomFixtures } from "../../domain/room-builder";
 
 export class RoomStoreInMemory implements RoomStore {
-  private rooms: Room[] = [new Room("TheBizarreRoom", "gm", "TheBizarreAdventure")];
+  private rooms: Room[] = [];
 
-  load(name: string) {
+  async init() {
+    this.rooms = [RoomFixtures.atalykisGreatRoom, RoomFixtures.basicRoom, RoomFixtures.escapeRoom];
+  }
+
+  async onModuleInit() {
+    await this.init();
+  }
+
+  async load(name: string) {
     const room = this.rooms.find((room) => room.name === name);
     return room;
   }
 
-  add(room: Room) {
+  async loadManyFromAdventure(adventure: string): Promise<Room[]> {
+    const rooms = this.rooms.filter((room) => room.adventure === adventure);
+    console.log(rooms);
+    return rooms;
+  }
+
+  async add(room: Room) {
     this.rooms.push(room);
   }
 

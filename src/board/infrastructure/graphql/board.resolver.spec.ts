@@ -96,8 +96,6 @@ describe("BoardResolver", () => {
         line: LineFixtures.blueDash.serialize(),
       });
 
-      expect(result.errors).toBeUndefined();
-
       expect(result.data).toEqual({
         draw: {
           roomName: board.roomName,
@@ -106,36 +104,4 @@ describe("BoardResolver", () => {
       });
     });
   });
-
-  // describe("Subscription watch", () => {
-  //   it("should subscribe to the board lines", async () => {
-  //     const client = new SubscriptionClient();
-
-  //     const board = new BoardBuilder().withRoomName("room-a").build();
-
-  //     await store.save(board);
-
-  //     const result = await graphql.execute(
-  //       gql`
-  //         subscription Watch($roomName: String!) {
-  //           watch(roomName: $roomName) {
-  //             points {
-  //               x
-  //               y
-  //             }
-  //             thickness
-  //             color
-  //           }
-  //         }
-  //       `,
-  //       { roomName: "room-a" }
-  //     );
-
-  //     expect(result.errors).toBeUndefined();
-
-  //     expect(result.data).toEqual({
-  //       watch: LineFixtures.blueDash.serialize(),
-  //     });
-  //   });
-  // });
 });

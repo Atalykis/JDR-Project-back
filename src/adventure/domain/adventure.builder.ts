@@ -20,6 +20,6 @@ class AdventureBuilder {
 }
 
 export class AdventureFixtures {
-  static greatEscape = new AdventureBuilder().withName("greatEscape").as("gm").build();
+  static greatEscape = new AdventureBuilder().withName("TheGreatEscape").as("gm").build();
   static basicAdventure = new AdventureBuilder().withName("basicAdventure").as("gm").build();
 }

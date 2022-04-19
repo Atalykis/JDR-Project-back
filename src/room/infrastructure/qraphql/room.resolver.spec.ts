@@ -7,6 +7,8 @@ import { gql } from "apollo-server-express";
 import { CharacterFixtures } from "../../../character/domain/character.builder";
 import { CharacterStoreInMemory } from "../../../character/infrastructure/character.store.in-memory";
 import { Room } from "../../domain/room";
+import { RoomFixtures } from "../../domain/room-builder";
+import { Adventure } from "../../../adventure/domain/adventure";
 describe("Room Resolver", () => {
   let app: INestApplication;
   let graphql: GraphqlTestClient;
@@ -35,45 +37,157 @@ describe("Room Resolver", () => {
     await app.close();
   });
 
+  beforeEach(() => {
+    roomStore.clear();
+  });
+
   describe("Query Room's characters", () => {
-    const GetRoomCharacters = (name: string) => gql`
-    query GetRoomCharacters {
-        room(name: "${name}") {
-          name
-          gm
+    const GetRoomCharacters = gql`
+      query GetRoomCharacters($name: String!) {
+        room(name: $name) {
           characters {
-              name
-              owner
-              adventure
-              description
+            name
+            owner
+            adventure
+            description
           }
         }
-    }`;
+      }
+    `;
 
     it("should return all characters in a room", async () => {
-      const jojo = CharacterFixtures.Jojo.build();
-      const dio = CharacterFixtures.Dio.for("Aetherall").build();
-      const room = new Room("TheGreatRoom", "gm", "TheGreatEscape");
+      const jojo = CharacterFixtures.Jojo;
+      const dio = CharacterFixtures.Dio;
+      const room = RoomFixtures.escapeRoom;
 
       characterStore.add(jojo);
       characterStore.add(dio);
       room.join("Atalykis", jojo.identity);
       room.join("Aetherall", dio.identity);
-      roomStore.add(room);
+      await roomStore.add(room);
 
-      const { errors, data } = await graphql.execute(GetRoomCharacters("TheGreatRoom"));
+      const { errors, data } = await graphql.execute(GetRoomCharacters, { name: "escapeRoom" });
 
       expect(errors).toBeUndefined();
       expect(data).toEqual({
         room: {
-          name: "TheGreatRoom",
-          gm: "gm",
           characters: [
             { name: "Jojo", owner: "Atalykis", adventure: "TheGreatEscape", description: "Default description" },
             { name: "Dio", owner: "Aetherall", adventure: "TheGreatEscape", description: "Default description" },
           ],
         },
       });
+    });
+  });
+
+  describe("Query Adventure's Rooms", () => {
+    const GetAdventureRooms = gql`
+      query GetAdventureRooms($adventure: String!) {
+        rooms(adventure: $adventure) {
+          name
+          gm
+          adventure
+        }
+      }
+    `;
+
+    it("should return all the rooms contained inside an adventure", async () => {
+      const escapeRoom = RoomFixtures.escapeRoom;
+      const greatRoom = RoomFixtures.greatRoom;
+
+      await roomStore.add(escapeRoom);
+      await roomStore.add(greatRoom);
+
+      const { errors, data } = await graphql.execute(GetAdventureRooms, { adventure: "TheGreatEscape" });
+
+      expect(errors).toBeUndefined();
+      expect(data).toEqual({
+        rooms: [
+          {
+            name: escapeRoom.name,
+            gm: escapeRoom.gm,
+            adventure: escapeRoom.adventure,
+          },
+          {
+            name: greatRoom.name,
+            gm: greatRoom.gm,
+            adventure: greatRoom.adventure,
+          },
+        ],
+      });
+    });
+  });
+
+  describe("Mutation Create Room", () => {
+    const mutation = gql`
+      mutation createRoom($name: String!, $adventure: String!) {
+        createRoom(name: $name, adventure: $adventure) {
+          name
+          adventure
+          gm
+        }
+      }
+    `;
+
+    it("should create a room", async () => {
+      const room = RoomFixtures.atalykisGreatRoom;
+
+      const result = await graphql.execute(mutation, {
+        name: room.name,
+        adventure: room.adventure,
+      });
+
+      const created = await roomStore.load(room.name);
+
+      expect(result.errors).toBeUndefined();
+
+      expect(result.data).toEqual({
+        createRoom: {
+          name: room.name,
+          gm: room.gm,
+          adventure: room.adventure,
+        },
+      });
+
+      expect(created).toEqual(room);
+    });
+  });
+
+  describe("Mutation Join Room", () => {
+    const mutation = gql`
+      mutation JoinRoom($room: String!, $character: CharacterInput!) {
+        joinRoom(room: $room, character: $character) {
+          name
+          characters {
+            name
+          }
+        }
+      }
+    `;
+
+    it("should allow to join a room", async () => {
+      const room = RoomFixtures.atalykisGreatRoom;
+      const character = CharacterFixtures.Jojo;
+      await roomStore.add(room);
+
+      const result = await graphql.execute(mutation, {
+        room: room.name,
+        character: character.identity.toObject(),
+      });
+
+      const joined = await roomStore.load(room.name);
+
+      expect(result.errors).toBeUndefined();
+
+      expect(result.data).toEqual({
+        joinRoom: {
+          name: room.name,
+          characters: [{ name: "Jojo" }],
+        },
+      });
+
+      expect(joined!.members).toEqual(["Atalykis"]);
+      expect(joined!.adventurers).toEqual([character.identity]);
     });
   });
 });

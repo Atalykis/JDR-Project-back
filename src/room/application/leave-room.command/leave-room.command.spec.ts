@@ -5,35 +5,35 @@ import { RoomStore } from "../room.store";
 import { CannotLeaveUnexistingRoomError, CannotLeaveUnjoinedRoomError, LeaveRoomCommand, LeaveRoomHandler } from "./leave-room.command";
 
 describe("LeaveRoomCommand", () => {
-  it("should allow a user to leave a room", () => {
+  it("should allow a user to leave a room", async () => {
     const command: LeaveRoomCommand = { user: "Cyril", room: "hall" };
     const roomStore: RoomStore = new RoomStoreInMemory();
     const room = new Room("hall", "gm", "GreatEscape");
-    roomStore.add(room);
+    await roomStore.add(room);
     room.join("Cyril", new CharacterIdentity("Jojoo", "Cyril", "GreatEscape"));
 
     expect(room.members).toEqual(["Cyril"]);
     const handler = new LeaveRoomHandler(roomStore);
 
-    handler.handle(command);
+    await handler.handle(command);
     expect(room.members).toEqual([]);
   });
 
-  it("should not allow a user to leave a room they're not in", () => {
+  it("should not allow a user to leave a room they're not in", async () => {
     const command: LeaveRoomCommand = { user: "Cyril", room: "hall" };
     const roomStore: RoomStore = new RoomStoreInMemory();
     const room = new Room("hall", "gm", "GreatEscape");
-    roomStore.add(room);
+    await roomStore.add(room);
     const handler = new LeaveRoomHandler(roomStore);
 
-    expect(() => handler.handle(command)).toThrow(CannotLeaveUnjoinedRoomError);
+    await expect(() => handler.handle(command)).rejects.toThrow(CannotLeaveUnjoinedRoomError);
   });
 
-  it("should not allow a user to leave an unexisting room", () => {
+  it("should not allow a user to leave an unexisting room", async () => {
     const command: LeaveRoomCommand = { user: "Cyril", room: "hall" };
     const roomStore: RoomStore = new RoomStoreInMemory();
     const handler = new LeaveRoomHandler(roomStore);
 
-    expect(() => handler.handle(command)).toThrow(CannotLeaveUnexistingRoomError);
+    await expect(() => handler.handle(command)).rejects.toThrow(CannotLeaveUnexistingRoomError);
   });
 });

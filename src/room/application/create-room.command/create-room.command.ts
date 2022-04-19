@@ -10,14 +10,14 @@ export interface CreateRoomCommand {
 export class CreateRoomHandler {
   constructor(private readonly roomStore: RoomStore) {}
 
-  handle(command: CreateRoomCommand) {
-    const alreadyExistingRoom = this.roomStore.load(command.name);
+  async handle(command: CreateRoomCommand) {
+    const alreadyExistingRoom = await this.roomStore.load(command.name);
 
     if (alreadyExistingRoom) {
       throw new CannotCreateRoomWithAlreadyTakenNameError(command.name);
     }
     const room = new Room(command.name, command.gm, command.adventure);
-    this.roomStore.add(room);
+    await this.roomStore.add(room);
     return room.name;
   }
 }

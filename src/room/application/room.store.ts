@@ -1,6 +1,8 @@
 import { Room } from "../domain/room";
 
 export interface RoomStore {
-  load(name: string): Room | undefined;
-  add(room: Room): void;
+  load(name: string): Promise<Room | undefined>;
+
+  loadManyFromAdventure(adventure: string): Promise<Room[]>;
+  add(room: Room): Promise<void>;
 }

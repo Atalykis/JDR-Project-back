@@ -3,6 +3,7 @@ import { CharacterStore } from "../../character/application/character.store";
 import { CharacterModule } from "../../character/character.module";
 import { UserModule } from "../../user/infrastructure/user.module";
 import { CreateRoomHandler } from "../application/create-room.command/create-room.command";
+import { GetAdventureRoomsQueryHandler } from "../application/get-adventure-rooms.query/get-adventure-rooms.query";
 import { GetRoomCharactersHandler } from "../application/get-room-characters.query/get-room-characters.query";
 import { GetRoomPlayersHandler } from "../application/get-room-players.query/get-room-players.query";
 import { JoinRoomHandler } from "../application/join-room.command/join-room.command";
@@ -81,6 +82,11 @@ import { RoomStoreInMemory } from "./store/room.store.in-memory";
     {
       provide: GetRoomCharactersHandler,
       useFactory: (roomStore: RoomStore) => new GetRoomCharactersHandler(roomStore),
+      inject: ["RoomStore"],
+    },
+    {
+      provide: GetAdventureRoomsQueryHandler,
+      useFactory: (roomStore: RoomStore) => new GetAdventureRoomsQueryHandler(roomStore),
       inject: ["RoomStore"],
     },
     RoomResolver,

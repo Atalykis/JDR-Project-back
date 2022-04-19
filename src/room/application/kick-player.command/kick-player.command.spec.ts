@@ -18,44 +18,44 @@ describe("KickPlayerCommand", () => {
     roomStore.clear();
   });
 
-  it("should remove a player from the room", () => {
+  it("should remove a player from the room", async () => {
     const room = new Room("aRoom", "gm", "GreatEscape");
     const player = new User("Cyril", "password");
     room.join(player.username, new CharacterIdentity("Jojoo", "Cyril", "GreatEscape"));
-    roomStore.add(room);
+    await roomStore.add(room);
 
     const command: KickPlayerCommand = { room: room.name, player: player.username, originator: "gm" };
 
-    handler.handle(command);
+    await handler.handle(command);
 
-    const roomAfter = roomStore.load("aRoom");
+    const roomAfter = await roomStore.load("aRoom");
     expect(roomAfter!.has(player.username)).toBe(false);
   });
 
-  it("should fail if the room does not exist", () => {
+  it("should fail if the room does not exist", async () => {
     const command: KickPlayerCommand = { room: "nonExistingRoom", player: "Cyril", originator: "gm" };
 
-    expect(() => handler.handle(command)).toThrow(CannotKickPlayerFromNonExistingRoomError);
+    await expect(() => handler.handle(command)).rejects.toThrow(CannotKickPlayerFromNonExistingRoomError);
   });
 
-  it("should fail if the player is not in the room", () => {
+  it("should fail if the player is not in the room", async () => {
     const room = new Room("aRoom", "gm", "GreatEscape");
     const player = new User("Cyril", "password");
-    roomStore.add(room);
+    await roomStore.add(room);
 
     const command: KickPlayerCommand = { room: room.name, player: player.username, originator: "gm" };
 
-    expect(() => handler.handle(command)).toThrow(CannotKickPlayerOutsideARoomError);
+    await expect(() => handler.handle(command)).rejects.toThrow(CannotKickPlayerOutsideARoomError);
   });
 
-  it("should fail if the originator of the kick is not the gm", () => {
+  it("should fail if the originator of the kick is not the gm", async () => {
     const room = new Room("aRoom", "gm", "GreatEscape");
     const player = new User("Cyril", "password");
     room.join(player.username, new CharacterIdentity("Jojoo", "Cyril", "GreatEscape"));
-    roomStore.add(room);
+    await roomStore.add(room);
 
     const command: KickPlayerCommand = { room: room.name, player: player.username, originator: "notGm" };
 
-    expect(() => handler.handle(command)).toThrow(CannotKickPlayerIfNotGmError);
+    await expect(() => handler.handle(command)).rejects.toThrow(CannotKickPlayerIfNotGmError);
   });
 });

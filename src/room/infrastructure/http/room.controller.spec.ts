@@ -45,7 +45,7 @@ describe("RoomController", () => {
       expect(text).toBe("testingCreationRoom");
 
       // Asserting the good behaviour of our system
-      const createdRoom = roomStore.load("testingCreationRoom");
+      const createdRoom = await roomStore.load("testingCreationRoom");
       expect(createdRoom).toMatchObject({ name: "testingCreationRoom", gm: "Joojo" });
     });
 
@@ -53,7 +53,7 @@ describe("RoomController", () => {
       const token = getAuthenticatedTokenFor("Joojo");
 
       const room = new Room("alreadyExistingRoom", "gm", "GreatEscape");
-      roomStore.add(room);
+      await roomStore.add(room);
 
       const { status } = await request(app.getHttpServer())
         .post("/room")
@@ -69,7 +69,7 @@ describe("RoomController", () => {
       const token = getAuthenticatedTokenFor("Cyril");
 
       const room = new Room("testingJoinRoom", "gmjjj", "GreatEscape");
-      roomStore.add(room);
+      await roomStore.add(room);
 
       const { status, text } = await request(app.getHttpServer())
         .post("/join")
@@ -78,7 +78,7 @@ describe("RoomController", () => {
 
       expect({ status, text }).toMatchObject({ status: HttpStatus.NO_CONTENT, text: "" });
 
-      const joinedRoom = roomStore.load("testingJoinRoom");
+      const joinedRoom = await roomStore.load("testingJoinRoom");
       expect(joinedRoom!.members).toEqual(["Cyril"]);
       expect(joinedRoom!.adventurers).toEqual([{ name: "Jojoo", owner: "Cyril", adventure: "TheGreatEscape" }]);
     });
@@ -88,7 +88,7 @@ describe("RoomController", () => {
 
       const room = new Room("alreadyJoinedRoom", "gm", "GreatEscape");
       room.join("Cyril", new CharacterIdentity("Jojoo", "Cyril", "TheGreatEscape"));
-      roomStore.add(room);
+      await roomStore.add(room);
 
       const { status } = await request(app.getHttpServer())
         .post("/join")
@@ -97,7 +97,7 @@ describe("RoomController", () => {
 
       expect(status).toBe(HttpStatus.CONFLICT);
 
-      const joinedRoom = roomStore.load("alreadyJoinedRoom");
+      const joinedRoom = await roomStore.load("alreadyJoinedRoom");
       expect(joinedRoom!.members).toEqual(["Cyril"]);
     });
 
@@ -124,20 +124,20 @@ describe("RoomController", () => {
 
       expect(status).toBe(HttpStatus.NO_CONTENT);
 
-      const joinedRoom = roomStore.load("testingLeaveRoom");
+      const joinedRoom = await roomStore.load("testingLeaveRoom");
       expect(joinedRoom!.members).toEqual([]);
     });
 
     it("should not allow an user to leave a room he's not in", async () => {
       const token = getAuthenticatedTokenFor("Cyril");
       const room = new Room("alreadyLeftRoom", "gm", "GreatEscape");
-      roomStore.add(room);
+      await roomStore.add(room);
 
       const { status } = await request(app.getHttpServer()).post("/leave").set("Authorization", token).send({ room: "alreadyLeftRoom" });
 
       expect(status).toBe(HttpStatus.FORBIDDEN);
 
-      const joinedRoom = roomStore.load("alreadyLeftRoom");
+      const joinedRoom = await roomStore.load("alreadyLeftRoom");
       expect(joinedRoom!.members).toEqual([]);
     });
 
@@ -158,7 +158,7 @@ describe("RoomController", () => {
 
     it("should allow an user to retrieve the players of a room", async () => {
       const room = new Room("testingGetPlayersRoom", "gm", "GreatEscape");
-      roomStore.add(room);
+      await roomStore.add(room);
 
       await checkPlayers(room, []);
 
@@ -180,7 +180,7 @@ describe("RoomController", () => {
       const token = getAuthenticatedTokenFor("gm");
       const room = new Room("testingKickRoom", "gm", "GreatEscape");
       room.join("Cyril", new CharacterIdentity("Jojoo", "Cyril", "TheGreatEscape"));
-      roomStore.add(room);
+      await roomStore.add(room);
 
       const { status, text } = await request(app.getHttpServer())
         .post("/kick")
@@ -190,7 +190,7 @@ describe("RoomController", () => {
       expect(text).toBe("");
       expect(status).toBe(HttpStatus.NO_CONTENT);
 
-      const kickedRoom = roomStore.load("testingKickRoom");
+      const kickedRoom = await roomStore.load("testingKickRoom");
       expect(kickedRoom!.members).toEqual([]);
     });
 
@@ -198,7 +198,7 @@ describe("RoomController", () => {
       const token = getAuthenticatedTokenFor("notGm");
       const room = new Room("testingForbiddenKickRoom", "gm", "GreatEscape");
       room.join("Cyril", new CharacterIdentity("Jojoo", "Cyril", "TheGreatEscape"));
-      roomStore.add(room);
+      await roomStore.add(room);
 
       const { status } = await request(app.getHttpServer())
         .post("/kick")
@@ -207,7 +207,7 @@ describe("RoomController", () => {
 
       expect(status).toBe(HttpStatus.FORBIDDEN);
 
-      const afterRoom = roomStore.load("testingJoinRoom");
+      const afterRoom = await roomStore.load("testingJoinRoom");
       expect(afterRoom!.members).toEqual(["Cyril"]);
     });
   });

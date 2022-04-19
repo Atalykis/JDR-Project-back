@@ -14,9 +14,6 @@ export class InMemoryBoardStore extends BoardStore implements OnModuleInit {
 
   async onModuleInit() {
     await this.init();
-    // setInterval(() => {
-    //   this.init();
-    // }, 5000);
   }
 
   async load(roomName: string) {

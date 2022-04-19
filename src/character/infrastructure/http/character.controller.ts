@@ -33,7 +33,7 @@ class GetCharactersDto {
 
 @Controller()
 export class CharacterController {
-  constructor(private readonly createCharacterHandler: CreateCharacterHandler, private readonly getCharacterHandler: GetCharactersHandler) {}
+  constructor(private readonly createCharacterHandler: CreateCharacterHandler, private readonly getCharactersHandler: GetCharactersHandler) {}
 
   @UseGuards(AuthGuard)
   @Post("/character")
@@ -53,7 +53,8 @@ export class CharacterController {
   @Get("/characters")
   getCharacters(@Query(ValidationPipe) { adventure }: GetCharactersDto, @Username() owner: string) {
     try {
-      return this.getCharacterHandler.handle({ owner, adventure });
+      const characters = this.getCharactersHandler.handle({ owner, adventure });
+      return characters;
     } catch (error) {
       throw error;
     }

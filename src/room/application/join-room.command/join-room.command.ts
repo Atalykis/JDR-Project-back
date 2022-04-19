@@ -10,8 +10,8 @@ export interface JoinRoomCommand {
 export class JoinRoomHandler {
   constructor(private readonly roomStore: RoomStore) {}
 
-  handle(command: JoinRoomCommand) {
-    const room = this.roomStore.load(command.room);
+  async handle(command: JoinRoomCommand) {
+    const room = await this.roomStore.load(command.room);
     if (!room) {
       throw new CannotJoinUnexistingRoomError(command.room);
     }

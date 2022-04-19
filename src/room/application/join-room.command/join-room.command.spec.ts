@@ -5,7 +5,7 @@ import { RoomStore } from "../room.store";
 import { CannotJoinAleadyJoinedRoomError, CannotJoinUnexistingRoomError, JoinRoomCommand, JoinRoomHandler } from "./join-room.command";
 
 describe("JoinRoomCommand", () => {
-  it("should allow a user to join a room", () => {
+  it("should allow a user to join a room", async () => {
     const command: JoinRoomCommand = {
       user: "Cyril",
       room: "everyone",
@@ -13,17 +13,17 @@ describe("JoinRoomCommand", () => {
     };
     const roomStore: RoomStore = new RoomStoreInMemory();
     const room = new Room("everyone", "gm", "GreatEscape");
-    roomStore.add(room);
+    await roomStore.add(room);
 
     const handler = new JoinRoomHandler(roomStore);
 
-    handler.handle(command);
+    await handler.handle(command);
 
     expect(room.members).toEqual(["Cyril"]);
     expect(room.adventurers).toEqual([{ name: "Jojoo", owner: "Cyril", adventure: "GreatEscape" }]);
   });
 
-  it("should not allow an user to join a room he already joined", () => {
+  it("should not allow an user to join a room he already joined", async () => {
     const command: JoinRoomCommand = {
       user: "Cyril",
       room: "noone",
@@ -31,15 +31,15 @@ describe("JoinRoomCommand", () => {
     };
     const roomStore = new RoomStoreInMemory();
     const room = new Room("noone", "gm", "GreatEscape");
-    roomStore.add(room);
+    await roomStore.add(room);
     room.join("Cyril", new CharacterIdentity("Jojoo", "Cyril", "GreatEscape"));
 
     const handler = new JoinRoomHandler(roomStore);
 
-    expect(() => handler.handle(command)).toThrow(CannotJoinAleadyJoinedRoomError);
+    await expect(() => handler.handle(command)).rejects.toThrow(CannotJoinAleadyJoinedRoomError);
   });
 
-  it("should not allow an user to join an unexisting room ", () => {
+  it("should not allow an user to join an unexisting room ", async () => {
     const command: JoinRoomCommand = {
       user: "Cyril",
       room: "noone",
@@ -49,6 +49,6 @@ describe("JoinRoomCommand", () => {
 
     const handler = new JoinRoomHandler(roomStore);
 
-    expect(() => handler.handle(command)).toThrow(CannotJoinUnexistingRoomError);
+    await expect(() => handler.handle(command)).rejects.toThrow(CannotJoinUnexistingRoomError);
   });
 });

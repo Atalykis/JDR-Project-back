@@ -50,11 +50,20 @@ input LineInput {
 
 type Query {
   adventures: [Adventure!]!
-  room(name: String!): Room!
+  room(name: String!): Room
+  rooms(adventure: String!): [Room!]!
   characters(adventure: String!): [Character!]!
   board(roomName: String!): BoardType!
 }
 
 type Mutation {
+  createRoom(adventure: String!, name: String!): Room!
+  joinRoom(character: CharacterInput!, room: String!): Room!
   draw(line: LineInput!, roomName: String!): BoardType!
+}
+
+input CharacterInput {
+  name: String!
+  owner: String!
+  adventure: String!
 }

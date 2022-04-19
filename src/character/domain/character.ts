@@ -15,6 +15,14 @@ export class CharacterIdentity {
   toString() {
     return `${this.name} by ${this.owner} in ${this.adventure}`;
   }
+
+  toObject() {
+    return {
+      name: this.name,
+      owner: this.owner,
+      adventure: this.adventure,
+    };
+  }
 }
 
 export class Character {

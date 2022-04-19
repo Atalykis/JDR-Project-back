@@ -7,8 +7,8 @@ export interface GetRoomCharactersQuery {
 export class GetRoomCharactersHandler {
   constructor(private readonly roomStore: RoomStore) {}
 
-  handle(query: GetRoomCharactersQuery) {
-    const room = this.roomStore.load(query.room);
+  async handle(query: GetRoomCharactersQuery) {
+    const room = await this.roomStore.load(query.room);
     if (!room) {
       throw new CannotGetCharactersOfNonExistingRoom(query.room);
     }

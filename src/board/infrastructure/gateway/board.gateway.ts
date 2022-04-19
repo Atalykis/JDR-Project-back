@@ -34,7 +34,8 @@ export class BoardGateway implements OnGatewayConnection {
 
     const token = client.handshake.headers.authorization;
     if (!token) {
-      throw new Error("Not authenticated");
+      // throw new Error("Not authenticated");
+      return;
     }
 
     const username = this.tokenManager.getUsernameFromAccessToken(token);

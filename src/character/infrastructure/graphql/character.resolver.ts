@@ -1,5 +1,5 @@
 import { UseGuards } from "@nestjs/common";
-import { Query, Resolver, ObjectType, Field, Args } from "@nestjs/graphql";
+import { Query, Resolver, ObjectType, Field, Args, InputType } from "@nestjs/graphql";
 import { AuthGuard, Username } from "../../../user/infrastructure/guard/auth.guard";
 import { GetCharactersHandler } from "../../application/get-characters.query/get-characters.query";
 

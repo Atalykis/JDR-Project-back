@@ -9,8 +9,8 @@ export interface KickPlayerCommand {
 export class KickPlayerHandler {
   constructor(private readonly roomStore: RoomStore) {}
 
-  handle(command: KickPlayerCommand) {
-    const room = this.roomStore.load(command.room);
+  async handle(command: KickPlayerCommand) {
+    const room = await this.roomStore.load(command.room);
     if (!room) {
       throw new CannotKickPlayerFromNonExistingRoomError(command.room);
     }

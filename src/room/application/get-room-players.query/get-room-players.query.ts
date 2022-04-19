@@ -7,8 +7,8 @@ export interface GetRoomPlayersQuery {
 export class GetRoomPlayersHandler {
   constructor(private readonly roomStore: RoomStore) {}
 
-  handle(query: GetRoomPlayersQuery) {
-    const room = this.roomStore.load(query.room);
+  async handle(query: GetRoomPlayersQuery) {
+    const room = await this.roomStore.load(query.room);
     if (!room) {
       throw new CannotGetPlayersOfNonExistingRoom(query.room);
     }

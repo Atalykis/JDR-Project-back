@@ -96,9 +96,9 @@ export class RoomController {
 
   @UseGuards(AuthGuard)
   @Post("/room")
-  createRoom(@Body(ValidationPipe) { name, adventure }: CreateRoomInputDto, @Username() username: string) {
+  async createRoom(@Body(ValidationPipe) { name, adventure }: CreateRoomInputDto, @Username() username: string) {
     try {
-      return this.createRoomHandler.handle({ name, gm: username, adventure: adventure });
+      return await this.createRoomHandler.handle({ name, gm: username, adventure: adventure });
     } catch (error) {
       if (error instanceof CannotCreateRoomWithAlreadyTakenNameError) {
         throw new ConflictException(error.message);
@@ -110,9 +110,9 @@ export class RoomController {
   @UseGuards(AuthGuard)
   @Post("/join")
   @HttpCode(HttpStatus.NO_CONTENT)
-  joinRoom(@Body(ValidationPipe) { room, character }: JoinRoomInputDto, @Username() user: string) {
+  async joinRoom(@Body(ValidationPipe) { room, character }: JoinRoomInputDto, @Username() user: string) {
     try {
-      this.joinRoomHandler.handle({ room, user, character });
+      await this.joinRoomHandler.handle({ room, user, character });
     } catch (error) {
       if (error instanceof CannotJoinAleadyJoinedRoomError) {
         throw new ConflictException(error.message);
@@ -127,9 +127,9 @@ export class RoomController {
   @UseGuards(AuthGuard)
   @Post("/leave")
   @HttpCode(HttpStatus.NO_CONTENT)
-  leaveRoom(@Body(ValidationPipe) { room }: LeaveRoomInputDto, @Username() user: string) {
+  async leaveRoom(@Body(ValidationPipe) { room }: LeaveRoomInputDto, @Username() user: string) {
     try {
-      this.leaveRoomHandler.handle({ room, user });
+      await this.leaveRoomHandler.handle({ room, user });
     } catch (error) {
       if (error instanceof CannotLeaveUnjoinedRoomError) {
         throw new ForbiddenException(error.message);
@@ -143,9 +143,9 @@ export class RoomController {
   }
 
   @Get("/players")
-  getPlayers(@Body(ValidationPipe) { room }: GetRoomPlayersDto) {
+  async getPlayers(@Body(ValidationPipe) { room }: GetRoomPlayersDto) {
     try {
-      return this.getRoomPlayersHandler.handle({ room });
+      return await this.getRoomPlayersHandler.handle({ room });
     } catch (error) {
       if (error instanceof CannotGetPlayersOfNonExistingRoom) {
         throw new NotFoundException(error.message);
@@ -157,9 +157,9 @@ export class RoomController {
   @UseGuards(AuthGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post("/kick")
-  kickPlayer(@Body(ValidationPipe) { player, room }: KickPlayerDto, @Username() originator: string) {
+  async kickPlayer(@Body(ValidationPipe) { player, room }: KickPlayerDto, @Username() originator: string) {
     try {
-      this.kickPlayerHandler.handle({ player, room, originator });
+      await this.kickPlayerHandler.handle({ player, room, originator });
     } catch (error) {
       if (error instanceof CannotKickPlayerIfNotGmError) {
         throw new ForbiddenException(error.message);
