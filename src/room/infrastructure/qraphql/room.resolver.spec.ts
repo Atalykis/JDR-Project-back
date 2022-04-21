@@ -9,6 +9,8 @@ import { CharacterStoreInMemory } from "../../../character/infrastructure/charac
 import { Room } from "../../domain/room";
 import { RoomFixtures } from "../../domain/room-builder";
 import { Adventure } from "../../../adventure/domain/adventure";
+
+// TODO Add error handling already present in the controller
 describe("Room Resolver", () => {
   let app: INestApplication;
   let graphql: GraphqlTestClient;
@@ -165,7 +167,7 @@ describe("Room Resolver", () => {
       }
     `;
 
-    it("should allow to join a room", async () => {
+    it("should allow a user to join a room with a character", async () => {
       const room = RoomFixtures.atalykisGreatRoom;
       const character = CharacterFixtures.Jojo;
       await roomStore.add(room);
@@ -188,6 +190,76 @@ describe("Room Resolver", () => {
 
       expect(joined!.members).toEqual(["Atalykis"]);
       expect(joined!.adventurers).toEqual([character.identity]);
+    });
+  });
+
+  describe("Mutation Leave Room", () => {
+    const mutation = gql`
+      mutation LeaveRoom($room: String!) {
+        leaveRoom(room: $room) {
+          name
+          members
+        }
+      }
+    `;
+
+    it("should allow a user to leave a room", async () => {
+      const room = RoomFixtures.atalykisGreatRoom;
+      const character = CharacterFixtures.Jojo;
+      room.join("Atalykis", character.identity);
+      await roomStore.add(room);
+
+      const result = await graphql.execute(mutation, {
+        room: room.name,
+      });
+
+      const leavedRoom = await roomStore.load(room.name);
+
+      expect(result.errors).toBeUndefined();
+      expect(result.data).toEqual({
+        leaveRoom: {
+          name: room.name,
+          members: [],
+        },
+      });
+
+      expect(leavedRoom!.members).toEqual([]);
+    });
+  });
+
+  describe("Mutation Kick Player", () => {
+    const mutation = gql`
+      mutation KickPlayer($room: String!, $player: String!) {
+        kickPlayer(room: $room, player: $player) {
+          name
+          members
+        }
+      }
+    `;
+
+    it("should allow a gm to kick a player", async () => {
+      const room = RoomFixtures.atalykisGreatRoom;
+      const character = CharacterFixtures.Jojo;
+      room.join("Aetherall", character.identity);
+
+      await roomStore.add(room);
+
+      const result = await graphql.execute(mutation, {
+        room: room.name,
+        player: "Aetherall",
+      });
+
+      const kickPlayerTestRoom = await roomStore.load(room.name);
+
+      expect(result.errors).toBeUndefined();
+      expect(result.data).toEqual({
+        kickPlayer: {
+          name: room.name,
+          members: [],
+        },
+      });
+
+      expect(kickPlayerTestRoom!.members).toEqual([]);
     });
   });
 });

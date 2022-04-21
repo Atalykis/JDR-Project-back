@@ -20,7 +20,6 @@ export class RoomStoreInMemory implements RoomStore {
 
   async loadManyFromAdventure(adventure: string): Promise<Room[]> {
     const rooms = this.rooms.filter((room) => room.adventure === adventure);
-    console.log(rooms);
     return rooms;
   }
 

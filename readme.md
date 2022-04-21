@@ -36,12 +36,17 @@ Can a Room have multiple GM inside ?
 
 ## TODO
 
+// Replace all HTTP infrastructure with GraphQl
+// Refacto Room Joining == character + user --> user + AddCharacter??
+
+JDR depend d'Authentication et c'est normal
+
+## Done
+
 // Guard reading the header for the Authorization token
 // Guard <-- injects token manager, write username on request object
 // CustomParamDecorator --> lire la requete, get the username
 // Controller, use Guard + use Custom Param Decorator = have username when emitting command
-
-JDR depend d'Authentication et c'est normal
 
 ## Comment dependre d'info d'adventure dans character
 
