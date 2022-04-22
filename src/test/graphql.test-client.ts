@@ -6,14 +6,14 @@ import { makeGetAuthenticatedToken } from "../user/test/authenticated-token";
 
 export class GraphqlTestClient {
   token?: string;
-  private readonly getAuthenticatedToken: (username: string) => string;
+  private readonly getAuthenticatedToken: (username: string) => Promise<string>;
 
   constructor(public app: INestApplication) {
     this.getAuthenticatedToken = makeGetAuthenticatedToken(this.app);
   }
 
-  as(username: string) {
-    this.token = this.getAuthenticatedToken(username);
+  async as(username: string) {
+    this.token = await this.getAuthenticatedToken(username);
   }
 
   unauthenticated() {

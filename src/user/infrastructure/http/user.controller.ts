@@ -12,7 +12,6 @@ import {
 } from "@nestjs/common";
 import { IsString, MaxLength, MinLength } from "class-validator";
 import { AuthenticateUserHandler } from "../../application/authenticate-user.command/authenticate-user.command";
-import { GetUserInfoQuery, GetUserInfoQueryHandler } from "../../application/get-user-info.query/get-user-info.query";
 import { CannotCreateUserWithAlreadyTakenUsernameError, RegisterUserHandler } from "../../application/register-user.command/register-user.command";
 import { AuthGuard } from "../guard/auth.guard";
 
@@ -30,11 +29,7 @@ class RegisterUserDto {
 
 @Controller()
 export class UserController {
-  constructor(
-    private readonly registerUserHandler: RegisterUserHandler,
-    private readonly authenticateUserHandler: AuthenticateUserHandler,
-    private readonly getUserInfoQueryHandler: GetUserInfoQueryHandler
-  ) {}
+  constructor(private readonly registerUserHandler: RegisterUserHandler, private readonly authenticateUserHandler: AuthenticateUserHandler) {}
 
   @Post("/register")
   registerUser(@Body(ValidationPipe) { username, password }: RegisterUserDto) {
@@ -53,20 +48,6 @@ export class UserController {
   login(@Body() { username, password }: any) {
     try {
       return this.authenticateUserHandler.handle({ username, password });
-    } catch (error) {
-      if (error instanceof Error) {
-        throw new UnauthorizedException(error.message);
-      }
-      throw error;
-    }
-  }
-
-  @Post("/user")
-  @HttpCode(HttpStatus.OK)
-  getUserInfo(@Body() { token }: any) {
-    try {
-      const query = new GetUserInfoQuery(token);
-      return this.getUserInfoQueryHandler.handle(query);
     } catch (error) {
       if (error instanceof Error) {
         throw new UnauthorizedException(error.message);

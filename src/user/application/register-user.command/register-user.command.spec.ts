@@ -13,27 +13,27 @@ describe("RegisterUserCommand", () => {
     userStore.clear();
   });
 
-  it("should allow a newcomer to register as a User", () => {
+  it("should allow a newcomer to register as a User", async () => {
     const command: RegisterUserCommand = { username: "Aetherall", password: "pass" };
 
-    handler.handle(command);
+    await handler.handle(command);
 
-    const user = userStore.load("Aetherall");
+    const user = await userStore.load("Aetherall");
     expect(user).toBeDefined();
   });
 
-  it("should not allow to create two user with the same username", () => {
+  it("should not allow to create two user with the same username", async () => {
     const command: RegisterUserCommand = { username: "Aetherall", password: "pass" };
     const user = new User("Aetherall", "pass");
-    userStore.register(user);
+    await userStore.register(user);
 
     expect(() => handler.handle(command)).toThrow(CannotCreateUserWithAlreadyTakenUsernameError);
   });
 
-  it("should return an access token for the user", () => {
+  it("should return an access token for the user", async () => {
     const command: RegisterUserCommand = { username: "Aetherall", password: "pass" };
 
-    const token = handler.handle(command);
+    const token = await handler.handle(command);
     expect(token).toEqual("token=>Aetherall");
   });
 });

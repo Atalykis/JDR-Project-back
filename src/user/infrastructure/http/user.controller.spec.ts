@@ -28,13 +28,13 @@ describe("UserController", () => {
 
       expect(status).toBe(HttpStatus.CREATED);
 
-      const createdUser = userStore.load("NewUser");
+      const createdUser = await userStore.load("NewUser");
       expect(createdUser).toMatchObject({ username: "NewUser", password: "pass" });
     });
 
     it("should not allow to create a user if the username is already taken", async () => {
       const user = new User("existingUser", "pass");
-      userStore.register(user);
+      await userStore.register(user);
 
       const { status } = await request(app.getHttpServer()).post("/register").send({ username: "existingUser", password: "pass" });
 
@@ -44,7 +44,7 @@ describe("UserController", () => {
 
   describe("UserLogin", () => {
     it("should authenticate a user", async () => {
-      userStore.register(new User("Jojoo", "superpass"));
+      await userStore.register(new User("Jojoo", "superpass"));
 
       const { status, text } = await request(app.getHttpServer()).post("/login").send({
         username: "Jojoo",
@@ -53,13 +53,13 @@ describe("UserController", () => {
 
       expect(status).toBe(HttpStatus.OK);
 
-      const user = userStore.load("Jojoo");
+      const user = await userStore.load("Jojoo");
 
       expect(user!.hasToken(text)).toBe(true);
     });
 
     it("should return 403 Unauthorized if the login fails", async () => {
-      userStore.register(new User("Jojoo", "superpass"));
+      await userStore.register(new User("Jojoo", "superpass"));
 
       const { status } = await request(app.getHttpServer()).post("/login").send({
         username: "Jojoo",
@@ -67,17 +67,6 @@ describe("UserController", () => {
       });
 
       expect(status).toBe(HttpStatus.UNAUTHORIZED);
-    });
-  });
-
-  describe("UserInfo", () => {
-    it("should return the user's information", async () => {
-      userStore.register(new User("Jojoo", "superpass"));
-      const { status, text } = await request(app.getHttpServer()).post("/user").send({
-        token: "token=>Jojoo",
-      });
-
-      expect(JSON.parse(text)).toEqual({ name: "Jojoo" });
     });
   });
 });

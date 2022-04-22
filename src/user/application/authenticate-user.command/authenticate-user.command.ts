@@ -9,8 +9,8 @@ export interface AuthenticateUserCommand {
 export class AuthenticateUserHandler {
   constructor(private readonly userStore: UserStore, private readonly tokenManager: TokenManager) {}
 
-  handle(command: AuthenticateUserCommand) {
-    const user = this.userStore.load(command.username);
+  async handle(command: AuthenticateUserCommand) {
+    const user = await this.userStore.load(command.username);
     if (user && user.pass === command.password) {
       return this.tokenManager.generateAccessToken(user);
     } else {

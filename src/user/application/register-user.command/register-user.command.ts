@@ -10,14 +10,14 @@ export interface RegisterUserCommand {
 export class RegisterUserHandler {
   constructor(private readonly userStore: UserStore, private readonly tokenManager: TokenManager) {}
 
-  handle(command: RegisterUserCommand) {
-    const alreadyExistingUser = this.userStore.load(command.username);
+  async handle(command: RegisterUserCommand) {
+    const alreadyExistingUser = await this.userStore.load(command.username);
 
     if (alreadyExistingUser) {
       throw new CannotCreateUserWithAlreadyTakenUsernameError(command.username);
     }
     const user = new User(command.username, command.password);
-    this.userStore.register(user);
+    await this.userStore.register(user);
     return this.tokenManager.generateAccessToken(user);
   }
 }

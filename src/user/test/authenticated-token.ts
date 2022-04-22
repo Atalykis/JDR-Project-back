@@ -8,8 +8,8 @@ export function makeGetAuthenticatedToken(module: TestingModule | INestApplicati
   const userStore = module.get<UserStore>("UserStore");
   const tokenManager = module.get<TokenManager>("TokenManager");
 
-  return function getAuthenticatedTokenFor(username: string) {
-    let user = userStore.load(username);
+  return async function getAuthenticatedTokenFor(username: string) {
+    let user = await userStore.load(username);
     if (!user) {
       user = new User(username, "password");
       userStore.register(user);

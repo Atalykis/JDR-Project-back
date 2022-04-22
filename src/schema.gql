@@ -2,6 +2,15 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type User {
+  username: String!
+  password: String!
+}
+
+type Token {
+  token: String!
+}
+
 type Character {
   name: String!
   owner: String!
@@ -51,6 +60,7 @@ input LineInput {
 
 type Query {
   adventures: [Adventure!]!
+  user(username: String!): User!
   room(name: String!): Room
   rooms(adventure: String!): [Room!]!
   characters(adventure: String!): [Character!]!
@@ -59,6 +69,8 @@ type Query {
 }
 
 type Mutation {
+  register(password: String!, username: String!): User!
+  login(password: String!, username: String!): Token!
   createRoom(adventure: String!, name: String!): Room!
   joinRoom(room: String!): Room!
   leaveRoom(room: String!): Room!

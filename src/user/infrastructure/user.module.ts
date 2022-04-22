@@ -1,10 +1,10 @@
 import { Module } from "@nestjs/common";
 import { AuthenticateUserHandler } from "../application/authenticate-user.command/authenticate-user.command";
-import { GetUserInfoQueryHandler } from "../application/get-user-info.query/get-user-info.query";
 import { RegisterUserHandler } from "../application/register-user.command/register-user.command";
 
 import { TokenManager } from "../application/token-manager";
 import { UserStore } from "../application/user.store";
+import { UserResolver } from "./graphql/user.resolver";
 import { AuthGuard } from "./guard/auth.guard";
 import { UserController } from "./http/user.controller";
 import { UserStoreInMemory } from "./store/user.store.in-memory";
@@ -25,11 +25,7 @@ import { CryptrTokenManager } from "./token/crypto.token-manager";
       useFactory: (userStore: UserStore, tokenManager: TokenManager) => new AuthenticateUserHandler(userStore, tokenManager),
       inject: ["UserStore", "TokenManager"],
     },
-    {
-      provide: GetUserInfoQueryHandler,
-      useFactory: (tokenManager: TokenManager) => new GetUserInfoQueryHandler(tokenManager),
-      inject: ["TokenManager"],
-    },
+    UserResolver,
   ],
   exports: ["TokenManager"],
 })
