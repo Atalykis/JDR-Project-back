@@ -11,8 +11,8 @@ export interface CreateCharacterCommand {
 export class CreateCharacterHandler {
   constructor(private readonly characterStore: CharacterStore) {}
 
-  handle(command: CreateCharacterCommand) {
-    const existing = this.characterStore.load(new CharacterIdentity(command.name, command.user, command.adventure));
+  async handle(command: CreateCharacterCommand) {
+    const existing = await this.characterStore.load(new CharacterIdentity(command.name, command.user, command.adventure));
     if (existing) {
       throw new CannotCreateCharacterWithAlreadyTakenNameForUserError(command.user, command.name);
     }

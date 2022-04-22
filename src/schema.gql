@@ -54,6 +54,7 @@ type Query {
   room(name: String!): Room
   rooms(adventure: String!): [Room!]!
   characters(adventure: String!): [Character!]!
+  character(adventure: String!, name: String!): Character!
   board(roomName: String!): BoardType!
 }
 
@@ -63,6 +64,7 @@ type Mutation {
   leaveRoom(room: String!): Room!
   kickPlayer(player: String!, room: String!): Room!
   addCharacter(character: CharacterInput!, room: String!): Room!
+  createCharacter(description: String!, adventure: String!, name: String!): Character!
   draw(line: LineInput!, roomName: String!): BoardType!
 }
 

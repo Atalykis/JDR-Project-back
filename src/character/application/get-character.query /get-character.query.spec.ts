@@ -3,15 +3,15 @@ import { CharacterStoreInMemory } from "../../infrastructure/character.store.in-
 import { GetCharacterQuery, GetCharacterHandler } from "./get-character.query";
 
 describe("GetCharactersQuery", () => {
-  it("should retrieve a character owned by a user in an Adventure", () => {
+  it("should retrieve a character owned by a user in an Adventure", async () => {
     const characterStore = new CharacterStoreInMemory();
     const handler = new GetCharacterHandler(characterStore);
 
     const character = new Character("Jojoo", "Atalykis", "TheGreatEscape", "Jeune homme très très viril");
-    characterStore.add(character);
+    await characterStore.add(character);
 
     const query: GetCharacterQuery = { character: new CharacterIdentity("Jojoo", "Atalykis", "TheGreatEscape") };
-    const loaded = handler.handle(query);
+    const loaded = await handler.handle(query);
 
     expect(loaded).toEqual(character);
   });

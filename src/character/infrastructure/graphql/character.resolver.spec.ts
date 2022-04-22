@@ -8,6 +8,7 @@ import { INestApplication } from "@nestjs/common";
 import { CharacterStore } from "../../application/character.store";
 import request from "supertest";
 import { GraphqlTestClient } from "../../../test/graphql.test-client";
+import { Character, CharacterIdentity } from "../../domain/character";
 
 describe("Character Resolver", () => {
   let app: INestApplication;
@@ -35,34 +36,100 @@ describe("Character Resolver", () => {
   });
 
   describe("Query characters", () => {
-    const GetOwnedCharacters = (adventure: string) => gql`
-    query GetOwnedCharacters {
-      characters(adventure: "${adventure}"){
-        name
-        owner
-        adventure
-        description
+    const query = gql`
+      query GetOwnedCharacters($adventure: String!) {
+        characters(adventure: $adventure) {
+          name
+          owner
+          adventure
+          description
+        }
       }
-    }
     `;
 
     it("should return all characters owned by an user", async () => {
-      const jojo = CharacterFixtures.Jojo.build();
-      const dio = CharacterFixtures.Dio.build();
-      const notOwned = CharacterFixtures.Jojo.for("Aetherall").build();
+      const jojo = CharacterFixtures.Jojo;
+      const dio = CharacterFixtures.Dio;
+      const basic = CharacterFixtures.Adventurer;
+      await characterStore.add(jojo);
+      await characterStore.add(dio);
+      await characterStore.add(basic);
 
-      characterStore.add(jojo);
-      characterStore.add(dio);
-      characterStore.add(notOwned);
-
-      const { errors, data } = await graphql.execute(GetOwnedCharacters("TheGreatEscape"));
+      const { errors, data } = await graphql.execute(query, {
+        adventure: "TheGreatEscape",
+      });
 
       expect(errors).toBeUndefined();
       expect(data).toEqual({
         characters: [
           { name: "Jojo", owner: "Atalykis", adventure: "TheGreatEscape", description: "Default description" },
-          { name: "Dio", owner: "Atalykis", adventure: "TheGreatEscape", description: "Default description" },
+          // { name: "Adventurer", owner: "Atalykis", adventure: "TheGreatEscape", description: "Default description" },
         ],
+      });
+    });
+  });
+
+  describe("Mutation character", () => {
+    const query = gql`
+      query GetCharacter($name: String!, $adventure: String!) {
+        character(name: $name, adventure: $adventure) {
+          name
+          owner
+          adventure
+          description
+        }
+      }
+    `;
+    it("should return a character", async () => {
+      const jojo = CharacterFixtures.Jojo;
+      characterStore.add(jojo);
+
+      const { errors, data } = await graphql.execute(query, {
+        name: jojo.name,
+        adventure: jojo.adventure,
+      });
+
+      expect(errors).toBeUndefined();
+      expect(data).toEqual({
+        character: {
+          name: "Jojo",
+          owner: "Atalykis",
+          adventure: "TheGreatEscape",
+          description: "Default description",
+        },
+      });
+    });
+  });
+
+  describe("Mutation createCharacter", () => {
+    const mutation = gql`
+      mutation CreateCharacter($name: String!, $adventure: String!, $description: String!) {
+        createCharacter(name: $name, adventure: $adventure, description: $description) {
+          name
+          owner
+          adventure
+          description
+        }
+      }
+    `;
+    it("should allow a user to create a character", async () => {
+      const { errors, data } = await graphql.execute(mutation, {
+        name: "Adventurer",
+        adventure: "TheGreatEscape",
+        description: "Default description",
+      });
+
+      const createdCharacter = await characterStore.load(new CharacterIdentity("Adventurer", "Atalykis", "TheGreatEscape"));
+
+      expect(errors).toBeUndefined();
+      expect(createdCharacter).toBeDefined();
+      expect(data).toEqual({
+        createCharacter: {
+          name: "Adventurer",
+          owner: "Atalykis",
+          adventure: "TheGreatEscape",
+          description: "Default description",
+        },
       });
     });
   });

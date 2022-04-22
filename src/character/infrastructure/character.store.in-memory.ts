@@ -6,26 +6,26 @@ export class CharacterStoreInMemory implements CharacterStore {
   characters: Character[] = [];
 
   async init() {
-    this.characters = [CharacterFixtures.Dio, CharacterFixtures.Jojo, CharacterFixtures.Adventurer];
+    this.characters = [];
   }
 
   async onModuleInit() {
     await this.init();
   }
-  add(character: Character) {
+  async add(character: Character) {
     this.characters.push(character);
   }
 
-  load(character: CharacterIdentity) {
+  async load(character: CharacterIdentity) {
     return this.characters.find((c) => c.name === character.name && c.adventure === character.adventure && c.owner === character.owner);
   }
 
-  loadOwnedForAdventure(owner: string, adventure: string) {
+  async loadOwnedForAdventure(owner: string, adventure: string) {
     const result = this.characters.filter((c) => c.owner === owner && c.adventure === adventure);
     return result;
   }
 
-  loadMany(characterIds: CharacterIdentity[]) {
+  async loadMany(characterIds: CharacterIdentity[]) {
     const loaded: Character[] = [];
     for (const id of characterIds) {
       const stored = this.characters.find((c) => c.identity.equals(id));

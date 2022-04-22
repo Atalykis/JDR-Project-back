@@ -8,8 +8,8 @@ export interface GetCharactersQuery {
 export class GetCharactersHandler {
   constructor(public readonly characterStore: CharacterStore) {}
 
-  handle(query: GetCharactersQuery) {
-    const result = this.characterStore.loadOwnedForAdventure(query.owner, query.adventure);
+  async handle(query: GetCharactersQuery) {
+    const result = await this.characterStore.loadOwnedForAdventure(query.owner, query.adventure);
     return result;
   }
 }

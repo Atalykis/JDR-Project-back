@@ -8,9 +8,8 @@ export interface GetCharacterQuery {
 export class GetCharacterHandler {
   constructor(public readonly characterStore: CharacterStore) {}
 
-  handle(query: GetCharacterQuery) {
-    const result = this.characterStore.load(query.character);
-    console.log(result);
+  async handle(query: GetCharacterQuery) {
+    const result = await this.characterStore.load(query.character);
     return result;
   }
 }
