@@ -76,9 +76,7 @@ class CharacterInputDto {
   adventure!: string;
 }
 
-class JoinRoomInputDto extends RoomInputDto {
-  character: CharacterIdentity;
-}
+class JoinRoomInputDto extends RoomInputDto {}
 
 class GetRoomPlayersDto extends RoomInputDto {}
 
@@ -110,9 +108,9 @@ export class RoomController {
   @UseGuards(AuthGuard)
   @Post("/join")
   @HttpCode(HttpStatus.NO_CONTENT)
-  async joinRoom(@Body(ValidationPipe) { room, character }: JoinRoomInputDto, @Username() user: string) {
+  async joinRoom(@Body(ValidationPipe) { room }: JoinRoomInputDto, @Username() user: string) {
     try {
-      await this.joinRoomHandler.handle({ room, user, character });
+      await this.joinRoomHandler.handle({ room, user });
     } catch (error) {
       if (error instanceof CannotJoinAleadyJoinedRoomError) {
         throw new ConflictException(error.message);

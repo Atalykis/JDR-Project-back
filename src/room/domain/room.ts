@@ -12,9 +12,8 @@ export class Room {
     return this.users.has(user);
   }
 
-  join(user: string, character: CharacterIdentity): void {
+  join(user: string): void {
     this.users.add(user);
-    this.characters.add(character);
   }
 
   leave(user: string): void {
@@ -23,6 +22,10 @@ export class Room {
 
   kick(user: string): void {
     this.users.delete(user);
+  }
+
+  addCharacter(character: CharacterIdentity): void {
+    this.characters.add(character);
   }
 
   get members(): string[] {

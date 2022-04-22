@@ -4,6 +4,7 @@ import { CharacterStore } from "../../../character/application/character.store";
 import { CharacterIdentity } from "../../../character/domain/character";
 import { CharacterType } from "../../../character/infrastructure/graphql/character.resolver";
 import { AuthGuard, Username } from "../../../user/infrastructure/guard/auth.guard";
+import { AddCharacterCommandHandler } from "../../application/add-character.command/add-character.command";
 import { CreateRoomHandler } from "../../application/create-room.command/create-room.command";
 import { GetAdventureRoomsQueryHandler } from "../../application/get-adventure-rooms.query/get-adventure-rooms.query";
 import { GetRoomCharactersHandler } from "../../application/get-room-characters.query/get-room-characters.query";
@@ -52,6 +53,7 @@ export class RoomResolver {
     private readonly getRoomCharactersHandler: GetRoomCharactersHandler,
     private readonly kickPlayerHandler: KickPlayerHandler,
 
+    private readonly addCharacterCommandHandler: AddCharacterCommandHandler,
     private readonly getAdventureRoomsQueryHandler: GetAdventureRoomsQueryHandler,
     @Inject("CharacterStore") private readonly characterStore: CharacterStore,
     @Inject("RoomStore") private readonly roomStore: RoomStore
@@ -87,9 +89,8 @@ export class RoomResolver {
   }
 
   @Mutation(() => RoomType)
-  async joinRoom(@Username() user: string, @Args("room") room: string, @Args("character") character: CharacterInput) {
-    const characterIdentity = new CharacterIdentity(character.name, character.owner, character.adventure);
-    await this.joinRoomHandler.handle({ room, user, character: characterIdentity });
+  async joinRoom(@Username() user: string, @Args("room") room: string) {
+    await this.joinRoomHandler.handle({ room, user });
     return this.room(room);
   }
 
@@ -102,6 +103,13 @@ export class RoomResolver {
   @Mutation(() => RoomType)
   async kickPlayer(@Username() originator: string, @Args("room") room: string, @Args("player") player: string) {
     await this.kickPlayerHandler.handle({ player, room, originator });
+    return this.room(room);
+  }
+
+  @Mutation(() => RoomType)
+  async addCharacter(@Args("room") room: string, @Args("character") character: CharacterInput) {
+    const characterIdentity = new CharacterIdentity(character.name, character.owner, character.adventure);
+    await this.addCharacterCommandHandler.handle({ room: room, character: characterIdentity });
     return this.room(room);
   }
 }

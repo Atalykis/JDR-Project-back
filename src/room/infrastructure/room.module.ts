@@ -2,6 +2,7 @@ import { Module } from "@nestjs/common";
 import { CharacterStore } from "../../character/application/character.store";
 import { CharacterModule } from "../../character/character.module";
 import { UserModule } from "../../user/infrastructure/user.module";
+import { AddCharacterCommandHandler } from "../application/add-character.command/add-character.command";
 import { CreateRoomHandler } from "../application/create-room.command/create-room.command";
 import { GetAdventureRoomsQueryHandler } from "../application/get-adventure-rooms.query/get-adventure-rooms.query";
 import { GetRoomCharactersHandler } from "../application/get-room-characters.query/get-room-characters.query";
@@ -13,6 +14,52 @@ import { RoomStore } from "../application/room.store";
 import { RoomController } from "./http/room.controller";
 import { RoomResolver } from "./qraphql/room.resolver";
 import { RoomStoreInMemory } from "./store/room.store.in-memory";
+
+@Module({
+  imports: [UserModule, CharacterModule],
+  controllers: [RoomController],
+  providers: [
+    { provide: "RoomStore", useClass: RoomStoreInMemory },
+    {
+      provide: CreateRoomHandler,
+      useFactory: (roomStore: RoomStore) => new CreateRoomHandler(roomStore),
+      inject: ["RoomStore"],
+    },
+    { provide: AddCharacterCommandHandler, useFactory: (roomStore: RoomStore) => new AddCharacterCommandHandler(roomStore), inject: ["RoomStore"] },
+    {
+      provide: JoinRoomHandler,
+      useFactory: (roomStore: RoomStore) => new JoinRoomHandler(roomStore),
+      inject: ["RoomStore"],
+    },
+    {
+      provide: LeaveRoomHandler,
+      useFactory: (roomStore: RoomStore) => new LeaveRoomHandler(roomStore),
+      inject: ["RoomStore"],
+    },
+    {
+      provide: GetRoomPlayersHandler,
+      useFactory: (roomStore: RoomStore) => new GetRoomPlayersHandler(roomStore),
+      inject: ["RoomStore"],
+    },
+    {
+      provide: KickPlayerHandler,
+      useFactory: (roomStore: RoomStore) => new KickPlayerHandler(roomStore),
+      inject: ["RoomStore"],
+    },
+    {
+      provide: GetRoomCharactersHandler,
+      useFactory: (roomStore: RoomStore) => new GetRoomCharactersHandler(roomStore),
+      inject: ["RoomStore"],
+    },
+    {
+      provide: GetAdventureRoomsQueryHandler,
+      useFactory: (roomStore: RoomStore) => new GetAdventureRoomsQueryHandler(roomStore),
+      inject: ["RoomStore"],
+    },
+    RoomResolver,
+  ],
+})
+export class RoomModule {}
 
 // const lol = 'test'
 // const obj = { [lol]: true } // { test: true }
@@ -48,48 +95,3 @@ import { RoomStoreInMemory } from "./store/room.store.in-memory";
 //   roomStore: new (...args: any[]) => RoomStore
 // ]
 // provide(RoomResolver, [GetRoomCharactersHandler, ])
-
-@Module({
-  imports: [UserModule, CharacterModule],
-  controllers: [RoomController],
-  providers: [
-    { provide: "RoomStore", useClass: RoomStoreInMemory },
-    {
-      provide: CreateRoomHandler,
-      useFactory: (roomStore: RoomStore) => new CreateRoomHandler(roomStore),
-      inject: ["RoomStore"],
-    },
-    {
-      provide: JoinRoomHandler,
-      useFactory: (roomStore: RoomStore) => new JoinRoomHandler(roomStore),
-      inject: ["RoomStore"],
-    },
-    {
-      provide: LeaveRoomHandler,
-      useFactory: (roomStore: RoomStore) => new LeaveRoomHandler(roomStore),
-      inject: ["RoomStore"],
-    },
-    {
-      provide: GetRoomPlayersHandler,
-      useFactory: (roomStore: RoomStore) => new GetRoomPlayersHandler(roomStore),
-      inject: ["RoomStore"],
-    },
-    {
-      provide: KickPlayerHandler,
-      useFactory: (roomStore: RoomStore) => new KickPlayerHandler(roomStore),
-      inject: ["RoomStore"],
-    },
-    {
-      provide: GetRoomCharactersHandler,
-      useFactory: (roomStore: RoomStore) => new GetRoomCharactersHandler(roomStore),
-      inject: ["RoomStore"],
-    },
-    {
-      provide: GetAdventureRoomsQueryHandler,
-      useFactory: (roomStore: RoomStore) => new GetAdventureRoomsQueryHandler(roomStore),
-      inject: ["RoomStore"],
-    },
-    RoomResolver,
-  ],
-})
-export class RoomModule {}

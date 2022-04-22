@@ -9,7 +9,6 @@ describe("JoinRoomCommand", () => {
     const command: JoinRoomCommand = {
       user: "Cyril",
       room: "everyone",
-      character: new CharacterIdentity("Jojoo", "Cyril", "GreatEscape"),
     };
     const roomStore: RoomStore = new RoomStoreInMemory();
     const room = new Room("everyone", "gm", "GreatEscape");
@@ -20,19 +19,17 @@ describe("JoinRoomCommand", () => {
     await handler.handle(command);
 
     expect(room.members).toEqual(["Cyril"]);
-    expect(room.adventurers).toEqual([{ name: "Jojoo", owner: "Cyril", adventure: "GreatEscape" }]);
   });
 
   it("should not allow an user to join a room he already joined", async () => {
     const command: JoinRoomCommand = {
       user: "Cyril",
       room: "noone",
-      character: new CharacterIdentity("Jojoo", "Cyril", "GreatEscape"),
     };
     const roomStore = new RoomStoreInMemory();
     const room = new Room("noone", "gm", "GreatEscape");
     await roomStore.add(room);
-    room.join("Cyril", new CharacterIdentity("Jojoo", "Cyril", "GreatEscape"));
+    room.join("Cyril");
 
     const handler = new JoinRoomHandler(roomStore);
 
@@ -43,7 +40,6 @@ describe("JoinRoomCommand", () => {
     const command: JoinRoomCommand = {
       user: "Cyril",
       room: "noone",
-      character: new CharacterIdentity("Jojoo", "Cyril", "noone"),
     };
     const roomStore = new RoomStoreInMemory();
 

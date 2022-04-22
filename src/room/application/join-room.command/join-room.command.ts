@@ -4,7 +4,6 @@ import { RoomStore } from "../room.store";
 export interface JoinRoomCommand {
   room: string;
   user: string;
-  character: CharacterIdentity;
 }
 
 export class JoinRoomHandler {
@@ -19,7 +18,7 @@ export class JoinRoomHandler {
       throw new CannotJoinAleadyJoinedRoomError(command.user);
     }
 
-    room.join(command.user, command.character);
+    room.join(command.user);
   }
 }
 

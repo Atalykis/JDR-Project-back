@@ -64,8 +64,10 @@ describe("Room Resolver", () => {
 
       characterStore.add(jojo);
       characterStore.add(dio);
-      room.join("Atalykis", jojo.identity);
-      room.join("Aetherall", dio.identity);
+      room.join("Atalykis");
+      room.join("Aetherall");
+      room.addCharacter(jojo.identity);
+      room.addCharacter(dio.identity);
       await roomStore.add(room);
 
       const { errors, data } = await graphql.execute(GetRoomCharacters, { name: "escapeRoom" });
@@ -157,24 +159,20 @@ describe("Room Resolver", () => {
 
   describe("Mutation Join Room", () => {
     const mutation = gql`
-      mutation JoinRoom($room: String!, $character: CharacterInput!) {
-        joinRoom(room: $room, character: $character) {
+      mutation JoinRoom($room: String!) {
+        joinRoom(room: $room) {
           name
-          characters {
-            name
-          }
+          members
         }
       }
     `;
 
-    it("should allow a user to join a room with a character", async () => {
+    it("should allow a user to join a room", async () => {
       const room = RoomFixtures.atalykisGreatRoom;
-      const character = CharacterFixtures.Jojo;
       await roomStore.add(room);
 
       const result = await graphql.execute(mutation, {
         room: room.name,
-        character: character.identity.toObject(),
       });
 
       const joined = await roomStore.load(room.name);
@@ -184,12 +182,11 @@ describe("Room Resolver", () => {
       expect(result.data).toEqual({
         joinRoom: {
           name: room.name,
-          characters: [{ name: "Jojo" }],
+          members: ["Atalykis"],
         },
       });
 
       expect(joined!.members).toEqual(["Atalykis"]);
-      expect(joined!.adventurers).toEqual([character.identity]);
     });
   });
 
@@ -205,8 +202,7 @@ describe("Room Resolver", () => {
 
     it("should allow a user to leave a room", async () => {
       const room = RoomFixtures.atalykisGreatRoom;
-      const character = CharacterFixtures.Jojo;
-      room.join("Atalykis", character.identity);
+      room.join("Atalykis");
       await roomStore.add(room);
 
       const result = await graphql.execute(mutation, {
@@ -239,8 +235,7 @@ describe("Room Resolver", () => {
 
     it("should allow a gm to kick a player", async () => {
       const room = RoomFixtures.atalykisGreatRoom;
-      const character = CharacterFixtures.Jojo;
-      room.join("Aetherall", character.identity);
+      room.join("Aetherall");
 
       await roomStore.add(room);
 
@@ -260,6 +255,44 @@ describe("Room Resolver", () => {
       });
 
       expect(kickPlayerTestRoom!.members).toEqual([]);
+    });
+  });
+
+  describe("Mutation Add Character", () => {
+    const mutation = gql`
+      mutation AddCharacter($room: String!, $character: CharacterInput!) {
+        addCharacter(room: $room, character: $character) {
+          name
+          characters {
+            name
+          }
+        }
+      }
+    `;
+
+    it("should allow a user or gm to add a character to a room", async () => {
+      const room = RoomFixtures.atalykisGreatRoom;
+      const jojo = CharacterFixtures.Jojo;
+
+      await roomStore.add(room);
+      await characterStore.add(jojo);
+
+      const result = await graphql.execute(mutation, {
+        room: room.name,
+        character: jojo.identity,
+      });
+
+      const addCharacterTestRoom = await roomStore.load(room.name);
+
+      expect(result.errors).toBeUndefined();
+      expect(result.data).toEqual({
+        addCharacter: {
+          name: room.name,
+          characters: [{ name: jojo.name }],
+        },
+      });
+
+      expect(addCharacterTestRoom!.adventurers).toEqual([jojo.identity]);
     });
   });
 });
