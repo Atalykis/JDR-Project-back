@@ -22,4 +22,8 @@ export class AdventureStoreInMemory implements AdventureStore {
   async loadAll(): Promise<Adventure[]> {
     return this.adventures;
   }
+
+  async clear() {
+    this.adventures = [];
+  }
 }

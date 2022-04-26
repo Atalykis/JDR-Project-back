@@ -59,6 +59,7 @@ input LineInput {
 }
 
 type Query {
+  adventure(name: String!): Adventure!
   adventures: [Adventure!]!
   user(username: String!): User!
   room(name: String!): Room
@@ -69,6 +70,7 @@ type Query {
 }
 
 type Mutation {
+  createAdventure(name: String!): Adventure!
   register(password: String!, username: String!): User!
   login(password: String!, username: String!): Token!
   createRoom(adventure: String!, name: String!): Room!

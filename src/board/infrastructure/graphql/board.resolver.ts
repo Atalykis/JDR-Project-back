@@ -63,7 +63,6 @@ export class BoardResolver {
   @Query(() => BoardType)
   async board(@Args("roomName") roomName: string): Promise<BoardType> {
     const lines = await this.getLinesQueryHandler.handle({ roomName });
-    console.log("returning", lines);
     return {
       roomName,
       lines: lines.map((line) => line.serialize()),

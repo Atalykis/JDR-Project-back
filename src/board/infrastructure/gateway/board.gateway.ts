@@ -30,8 +30,6 @@ export class BoardGateway implements OnGatewayConnection {
   server: Server;
 
   async handleConnection(client: Socket, ...args: any[]) {
-    console.log(client.handshake.headers);
-
     const token = client.handshake.headers.authorization;
     if (!token) {
       // throw new Error("Not authenticated");
@@ -39,8 +37,6 @@ export class BoardGateway implements OnGatewayConnection {
     }
 
     const username = this.tokenManager.getUsernameFromAccessToken(token);
-
-    console.log(username);
 
     const queue = this.watchLinesSubscriptionHandler.handle({ user: username, roomName: "TheBizarreRoom" });
 

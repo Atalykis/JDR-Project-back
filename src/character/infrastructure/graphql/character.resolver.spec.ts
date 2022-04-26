@@ -47,13 +47,11 @@ describe("Character Resolver", () => {
       }
     `;
 
-    it("should return all characters owned by an user", async () => {
+    it("should return all characters inside an andventure owned by an user", async () => {
       const jojo = CharacterFixtures.Jojo;
       const dio = CharacterFixtures.Dio;
-      const basic = CharacterFixtures.Adventurer;
       await characterStore.add(jojo);
       await characterStore.add(dio);
-      await characterStore.add(basic);
 
       const { errors, data } = await graphql.execute(query, {
         adventure: "TheGreatEscape",
@@ -61,15 +59,12 @@ describe("Character Resolver", () => {
 
       expect(errors).toBeUndefined();
       expect(data).toEqual({
-        characters: [
-          { name: "Jojo", owner: "Atalykis", adventure: "TheGreatEscape", description: "Default description" },
-          // { name: "Adventurer", owner: "Atalykis", adventure: "TheGreatEscape", description: "Default description" },
-        ],
+        characters: [{ name: "Jojo", owner: "Atalykis", adventure: "TheGreatEscape", description: "Default description" }],
       });
     });
   });
 
-  describe("Mutation character", () => {
+  describe("Query character", () => {
     const query = gql`
       query GetCharacter($name: String!, $adventure: String!) {
         character(name: $name, adventure: $adventure) {

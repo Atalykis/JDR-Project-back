@@ -31,6 +31,10 @@ describe("AdventureResolver", () => {
     await app.close();
   });
 
+  beforeEach(() => {
+    adventureStore.clear();
+  });
+
   describe("adventures query", () => {
     const query = gql`
       query GetAdventures {
@@ -62,6 +66,56 @@ describe("AdventureResolver", () => {
           },
         ],
       });
+    });
+  });
+
+  describe("Get Adventure Query", () => {
+    const query = gql`
+      query GetAdventure($name: String!) {
+        adventure(name: $name) {
+          name
+          gm
+        }
+      }
+    `;
+    it("should allow a user to retrieve an adventure", async () => {
+      const greatEscape = AdventureFixtures.greatEscape;
+      await adventureStore.add(greatEscape);
+
+      const result = await graphql.execute(query, { name: greatEscape.name });
+
+      expect(result.errors).toBeUndefined();
+
+      expect(result.data).toEqual({
+        adventure: {
+          name: greatEscape.name,
+          gm: greatEscape.gm,
+        },
+      });
+    });
+  });
+
+  describe("Create Adventure Mutation", () => {
+    const mutation = gql`
+      mutation CreateAdventure($name: String!) {
+        createAdventure(name: $name) {
+          name
+        }
+      }
+    `;
+    it("should allow a user to create an adventure", async () => {
+      const result = await graphql.execute(mutation, { name: "TheGreatAdventure" });
+
+      const createdAdventure = await adventureStore.load("TheGreatAdventure");
+
+      expect(result.errors).toBeUndefined();
+
+      expect(result.data).toEqual({
+        createAdventure: {
+          name: "TheGreatAdventure",
+        },
+      });
+      expect(createdAdventure).toBeDefined();
     });
   });
 });
