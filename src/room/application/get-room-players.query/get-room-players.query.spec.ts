@@ -11,8 +11,8 @@ describe("GetRoomPlayersQuery", () => {
     const handler = new GetRoomPlayersHandler(roomStore);
     const room = new Room("palais", "Gm", "GreatEscape");
     await roomStore.add(room);
-    room.join("Cyril", new CharacterIdentity("Jojoo", "Cyril", "GreatEscape"));
-    room.join("Nico", new CharacterIdentity("oojoJ", "Nico", "GreatEscape"));
+    room.join("Cyril");
+    room.join("Nico");
 
     const response = await handler.handle(query);
 
