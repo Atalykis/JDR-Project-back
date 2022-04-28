@@ -11,12 +11,12 @@ export class GetAdventureQueryHandler {
   async handle(query: GetAdventureQuery): Promise<Adventure> {
     const adventure = await this.adventureStore.load(query.name);
     if (!adventure) {
-      throw new CannotRetrieveExistingAdventureError(query.name);
+      throw new CannotRetrieveNonExistingAdventureError(query.name);
     }
     return adventure;
   }
 }
-export class CannotRetrieveExistingAdventureError extends Error {
+export class CannotRetrieveNonExistingAdventureError extends Error {
   constructor(name: string) {
     super(`Cannot retrieve non existing adventure ${name}`);
   }

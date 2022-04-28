@@ -135,7 +135,6 @@ export class RoomController {
       if (error instanceof CannotLeaveUnexistingRoomError) {
         throw new NotFoundException(error.message);
       }
-
       throw error;
     }
   }

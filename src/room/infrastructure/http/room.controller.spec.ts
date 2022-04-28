@@ -32,7 +32,7 @@ describe("RoomController", () => {
 
   describe("Room creation", () => {
     it("should create a room and become an GM", async () => {
-      const token = getAuthenticatedTokenFor("Joojo");
+      const token = await getAuthenticatedTokenFor("Joojo");
 
       // Actually use our application, by making a request on the http server in our application
       const { status, text } = await request(app.getHttpServer())
@@ -50,7 +50,7 @@ describe("RoomController", () => {
     });
 
     it("should not allow to create a room if the name is already taken", async () => {
-      const token = getAuthenticatedTokenFor("Joojo");
+      const token = await getAuthenticatedTokenFor("Joojo");
 
       const room = new Room("alreadyExistingRoom", "gm", "GreatEscape");
       await roomStore.add(room);
@@ -66,7 +66,7 @@ describe("RoomController", () => {
 
   describe("Room joining", () => {
     it("should allow to join a room", async () => {
-      const token = getAuthenticatedTokenFor("Cyril");
+      const token = await getAuthenticatedTokenFor("Cyril");
 
       const room = new Room("testingJoinRoom", "gmjjj", "GreatEscape");
       await roomStore.add(room);
@@ -80,7 +80,7 @@ describe("RoomController", () => {
     });
 
     it("should not allow to join a room the user is already in", async () => {
-      const token = getAuthenticatedTokenFor("Cyril");
+      const token = await getAuthenticatedTokenFor("Cyril");
 
       const room = new Room("alreadyJoinedRoom", "gm", "GreatEscape");
       room.join("Cyril");
@@ -95,7 +95,7 @@ describe("RoomController", () => {
     });
 
     it("should not allow to join a non-existing room", async () => {
-      const token = getAuthenticatedTokenFor("Cyril");
+      const token = await getAuthenticatedTokenFor("Cyril");
 
       const { status } = await request(app.getHttpServer()).post("/join").set("Authorization", token).send({ room: "nonExistingRoom" });
       expect(status).toBe(HttpStatus.NOT_FOUND);
@@ -104,7 +104,7 @@ describe("RoomController", () => {
 
   describe("Room leaving", () => {
     it("should allow an user to leave a room he's in", async () => {
-      const token = getAuthenticatedTokenFor("Cyril");
+      const token = await getAuthenticatedTokenFor("Cyril");
 
       const room = new Room("testingLeaveRoom", "gm", "GreatEscape");
       room.join("Cyril");
@@ -119,7 +119,7 @@ describe("RoomController", () => {
     });
 
     it("should not allow an user to leave a room he's not in", async () => {
-      const token = getAuthenticatedTokenFor("Cyril");
+      const token = await getAuthenticatedTokenFor("Cyril");
       const room = new Room("alreadyLeftRoom", "gm", "GreatEscape");
       await roomStore.add(room);
 
@@ -132,7 +132,7 @@ describe("RoomController", () => {
     });
 
     it("should not allow to leave a non-existing room", async () => {
-      const token = getAuthenticatedTokenFor("Cyril");
+      const token = await getAuthenticatedTokenFor("Cyril");
       const { status } = await request(app.getHttpServer()).post("/leave").set("Authorization", token).send({ room: "nonExistingRoom" });
       expect(status).toBe(HttpStatus.NOT_FOUND);
     });
@@ -167,7 +167,7 @@ describe("RoomController", () => {
 
   describe("Kicking a player", () => {
     it("should kick a player from a room", async () => {
-      const token = getAuthenticatedTokenFor("gm");
+      const token = await getAuthenticatedTokenFor("gm");
       const room = new Room("testingKickRoom", "gm", "GreatEscape");
       room.join("Cyril");
       await roomStore.add(room);
@@ -185,7 +185,7 @@ describe("RoomController", () => {
     });
 
     it("should fail if the originator of the kick is not the gm of the room", async () => {
-      const token = getAuthenticatedTokenFor("notGm");
+      const token = await getAuthenticatedTokenFor("notGm");
       const room = new Room("testingForbiddenKickRoom", "gm", "GreatEscape");
       room.join("Cyril");
       await roomStore.add(room);

@@ -10,6 +10,15 @@ export class GetCharacterHandler {
 
   async handle(query: GetCharacterQuery) {
     const result = await this.characterStore.load(query.character);
+    if (!result) {
+      throw new CannotGetUnexistingCharacterError(query.character);
+    }
     return result;
+  }
+}
+
+export class CannotGetUnexistingCharacterError extends Error {
+  constructor(character: CharacterIdentity) {
+    super(`Cannot get character ${character.name} because it does not exist`);
   }
 }

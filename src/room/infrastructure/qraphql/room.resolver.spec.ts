@@ -9,6 +9,11 @@ import { CharacterStoreInMemory } from "../../../character/infrastructure/charac
 import { Room } from "../../domain/room";
 import { RoomFixtures } from "../../domain/room-builder";
 import { Adventure } from "../../../adventure/domain/adventure";
+import { CannotCreateRoomWithAlreadyTakenNameError } from "../../application/create-room.command/create-room.command";
+import { CannotJoinAleadyJoinedRoomError, CannotJoinUnexistingRoomError } from "../../application/join-room.command/join-room.command";
+import { CannotLeaveUnexistingRoomError, CannotLeaveUnjoinedRoomError } from "../../application/leave-room.command/leave-room.command";
+import { CannotKickPlayerIfNotGmError } from "../../application/kick-player.command/kick-player.command";
+import { CannotAddCharacterInsideNonExistingRoom } from "../../application/add-character.command/add-character.command";
 
 // TODO Add error handling already present in the controller
 describe("Room Resolver", () => {
@@ -155,6 +160,17 @@ describe("Room Resolver", () => {
 
       expect(created).toEqual(room);
     });
+
+    it("should not allow to create a room if name already taken", async () => {
+      const room = RoomFixtures.atalykisGreatRoom;
+      await roomStore.add(room);
+
+      const result = await graphql.execute(mutation, {
+        name: room.name,
+        adventure: room.adventure,
+      });
+      expect(result.errors[0].message).toEqual(new CannotCreateRoomWithAlreadyTakenNameError(room.name).message);
+    });
   });
 
   describe("Mutation Join Room", () => {
@@ -188,6 +204,27 @@ describe("Room Resolver", () => {
 
       expect(joined!.members).toEqual(["Atalykis"]);
     });
+
+    it("should not allow a user to join a room if already in it", async () => {
+      const room = RoomFixtures.atalykisGreatRoom;
+      const user = "Atalykis";
+      room.join(user);
+      await roomStore.add(room);
+
+      const result = await graphql.execute(mutation, {
+        room: room.name,
+      });
+
+      expect(result.errors[0].message).toEqual(new CannotJoinAleadyJoinedRoomError(user).message);
+    });
+
+    it("should not allow a user to join an unexisting room", async () => {
+      const result = await graphql.execute(mutation, {
+        room: "unexisting",
+      });
+
+      expect(result.errors[0].message).toEqual(new CannotJoinUnexistingRoomError("unexisting").message);
+    });
   });
 
   describe("Mutation Leave Room", () => {
@@ -220,6 +257,26 @@ describe("Room Resolver", () => {
       });
 
       expect(leavedRoom!.members).toEqual([]);
+    });
+
+    it("should fail if the user is not in the room", async () => {
+      const room = RoomFixtures.atalykisGreatRoom;
+      const user = "Atalykis";
+      await roomStore.add(room);
+
+      const result = await graphql.execute(mutation, {
+        room: room.name,
+      });
+
+      expect(result.errors[0].message).toEqual(new CannotLeaveUnjoinedRoomError(user).message);
+    });
+
+    it("should fail if the room does not exist", async () => {
+      const result = await graphql.execute(mutation, {
+        room: "unexisting",
+      });
+
+      expect(result.errors[0].message).toEqual(new CannotLeaveUnexistingRoomError("unexisting").message);
     });
   });
 
@@ -255,6 +312,20 @@ describe("Room Resolver", () => {
       });
 
       expect(kickPlayerTestRoom!.members).toEqual([]);
+    });
+
+    it("should fail if the originator is not a gm", async () => {
+      const room = RoomFixtures.greatRoom;
+      room.join("Aetherall");
+
+      await roomStore.add(room);
+
+      const result = await graphql.execute(mutation, {
+        room: room.name,
+        player: "Aetherall",
+      });
+
+      expect(result.errors[0].message).toEqual(new CannotKickPlayerIfNotGmError(room.name).message);
     });
   });
 
@@ -293,6 +364,15 @@ describe("Room Resolver", () => {
       });
 
       expect(addCharacterTestRoom!.adventurers).toEqual([jojo.identity]);
+    });
+
+    it("should fail if the room does not exist", async () => {
+      const result = await graphql.execute(mutation, {
+        room: "unexisting",
+        character: CharacterFixtures.Jojo.identity,
+      });
+
+      expect(result.errors[0].message).toEqual(new CannotAddCharacterInsideNonExistingRoom("unexisting").message);
     });
   });
 });

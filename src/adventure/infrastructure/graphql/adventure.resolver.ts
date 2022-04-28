@@ -1,8 +1,11 @@
-import { UseGuards } from "@nestjs/common";
+import { ConflictException, NotFoundException, UseGuards } from "@nestjs/common";
 import { Field, ObjectType, Resolver, Query, Args, Mutation } from "@nestjs/graphql";
 import { AuthGuard, Username } from "../../../user/infrastructure/guard/auth.guard";
-import { CreateAdventureHandler } from "../../application/create-adventure.command/create-adventure.command";
-import { GetAdventureQueryHandler } from "../../application/get-adventure.query/get-adventure.query";
+import {
+  CannotCreateAdventureWithAlreadyTakenNameError,
+  CreateAdventureHandler,
+} from "../../application/create-adventure.command/create-adventure.command";
+import { CannotRetrieveNonExistingAdventureError, GetAdventureQueryHandler } from "../../application/get-adventure.query/get-adventure.query";
 import { GetAdventuresQueryHandler } from "../../application/get-adventures-query/get-adventures.query";
 
 @ObjectType("Adventure")
@@ -24,9 +27,15 @@ export class AdventureResolver {
   ) {}
 
   @Query(() => AdventureType)
-  async adventure(@Args("name") name: string): Promise<AdventureType> {
-    const adventure = await this.getAdventureQueryHandler.handle({ name });
-    return adventure;
+  async adventure(@Args("name") name: string) {
+    try {
+      const adventure = await this.getAdventureQueryHandler.handle({ name });
+      return adventure;
+    } catch (error) {
+      if (error instanceof CannotRetrieveNonExistingAdventureError) {
+        throw new NotFoundException(error.message);
+      }
+    }
   }
 
   @Query(() => [AdventureType])
@@ -36,8 +45,14 @@ export class AdventureResolver {
   }
 
   @Mutation(() => AdventureType)
-  async createAdventure(@Args("name") name: string, @Username() gm: string): Promise<AdventureType> {
-    await this.createAdventureHandler.handle({ name, gm });
-    return this.adventure(name);
+  async createAdventure(@Args("name") name: string, @Username() gm: string) {
+    try {
+      await this.createAdventureHandler.handle({ name, gm });
+      return this.adventure(name);
+    } catch (error) {
+      if (error instanceof CannotCreateAdventureWithAlreadyTakenNameError) {
+        throw new ConflictException(error.message);
+      }
+    }
   }
 }

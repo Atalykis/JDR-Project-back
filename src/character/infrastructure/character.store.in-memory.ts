@@ -36,4 +36,8 @@ export class CharacterStoreInMemory implements CharacterStore {
     }
     return loaded;
   }
+
+  async clear() {
+    this.characters = [];
+  }
 }

@@ -9,6 +9,8 @@ import { CharacterStore } from "../../application/character.store";
 import request from "supertest";
 import { GraphqlTestClient } from "../../../test/graphql.test-client";
 import { Character, CharacterIdentity } from "../../domain/character";
+import { CannotGetUnexistingCharacterError } from "../../application/get-character.query /get-character.query";
+import { CannotCreateCharacterWithAlreadyTakenNameForUserError } from "../../application/create-character.command/create-character.comand";
 
 describe("Character Resolver", () => {
   let app: INestApplication;
@@ -31,6 +33,9 @@ describe("Character Resolver", () => {
     graphql.as("Atalykis");
   });
 
+  beforeEach(() => {
+    characterStore.clear();
+  });
   afterAll(async () => {
     await app.close();
   });
@@ -94,6 +99,16 @@ describe("Character Resolver", () => {
         },
       });
     });
+
+    it("should fail if the character does not exist", async () => {
+      const dio = CharacterFixtures.Dio;
+      const { errors, data } = await graphql.execute(query, {
+        name: dio.name,
+        adventure: dio.adventure,
+      });
+
+      expect(errors[0].message).toEqual(new CannotGetUnexistingCharacterError(dio.identity).message);
+    });
   });
 
   describe("Mutation createCharacter", () => {
@@ -126,6 +141,19 @@ describe("Character Resolver", () => {
           description: "Default description",
         },
       });
+    });
+
+    it("should fail if the user already got a character with the same name", async () => {
+      const jojo = CharacterFixtures.Jojo;
+      await characterStore.add(jojo);
+
+      const { errors, data } = await graphql.execute(mutation, {
+        name: jojo.name,
+        adventure: jojo.adventure,
+        description: jojo.description,
+      });
+
+      expect(errors[0].message).toEqual(new CannotCreateCharacterWithAlreadyTakenNameForUserError("Atalykis", jojo.name).message);
     });
   });
 });

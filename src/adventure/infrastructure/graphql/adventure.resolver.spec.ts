@@ -4,6 +4,8 @@ import { gql } from "apollo-server-express";
 import { BackendModule } from "../../../backend.module";
 import { GraphqlTestClient } from "../../../test/graphql.test-client";
 import { AdventureModule } from "../../adventure.module";
+import { CannotCreateAdventureWithAlreadyTakenNameError } from "../../application/create-adventure.command/create-adventure.command";
+import { CannotRetrieveNonExistingAdventureError } from "../../application/get-adventure.query/get-adventure.query";
 import { AdventureFixtures } from "../../domain/adventure.builder";
 import { AdventureStoreInMemory } from "../adventure.store.in-memory";
 
@@ -93,6 +95,12 @@ describe("AdventureResolver", () => {
         },
       });
     });
+
+    it("should tfail if the adventure does not exist", async () => {
+      const result = await graphql.execute(query, { name: "unexisting" });
+
+      expect(result.errors[0].message).toEqual(new CannotRetrieveNonExistingAdventureError("unexisting").message);
+    });
   });
 
   describe("Create Adventure Mutation", () => {
@@ -116,6 +124,15 @@ describe("AdventureResolver", () => {
         },
       });
       expect(createdAdventure).toBeDefined();
+    });
+
+    it("should fail if the adventure's name is already taken", async () => {
+      const greatEscape = AdventureFixtures.greatEscape;
+      await adventureStore.add(greatEscape);
+
+      const result = await graphql.execute(mutation, { name: greatEscape.name });
+
+      expect(result.errors[0].message).toEqual(new CannotCreateAdventureWithAlreadyTakenNameError(greatEscape.name).message);
     });
   });
 });

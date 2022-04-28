@@ -11,7 +11,7 @@ export class LeaveRoomHandler {
   async handle(command: LeaveRoomCommand) {
     const room = await this.roomStore.load(command.room);
     if (!room) {
-      throw new CannotLeaveUnexistingRoomError(command.user);
+      throw new CannotLeaveUnexistingRoomError(command.room);
     }
     if (!room.has(command.user)) {
       throw new CannotLeaveUnjoinedRoomError(command.user);
