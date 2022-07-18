@@ -13,6 +13,9 @@ import { GraphqlTestClient } from "../../../test/graphql.test-client";
 import { gql } from "apollo-server-express";
 import { BoardBuilder } from "../../domain/board.builder";
 import { DrawLineCommandHandler } from "../../application/draw-line.command/draw-line.command";
+import { TokenFixture } from "../../domain/token.builder";
+import { MoveTokenCommandHandler } from "../../application/move-token.command/move-token.command";
+import { Position } from "../../domain/token";
 
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -50,14 +53,14 @@ describe("BoardGateway", () => {
     await app.close();
   });
 
-  it("should allow any client to receive lines other client lines", async () => {
+  it("should allow any client to receive other client lines", async () => {
     const attachFirstMessageCatcher = (client: any) =>
       new Promise((resolve) => {
         client.on("LineAdded", (message: any) => resolve(message));
       });
 
-    const tokenA = getAuthenticatedTokenFor("Atalykis");
-    const tokenB = getAuthenticatedTokenFor("Aetherall");
+    const tokenA = await getAuthenticatedTokenFor("Atalykis");
+    const tokenB = await getAuthenticatedTokenFor("Aetherall");
 
     const clientA = await createConnectedWSClientFor(tokenA);
     const clientB = await createConnectedWSClientFor(tokenB);
@@ -84,5 +87,43 @@ describe("BoardGateway", () => {
 
     expect(await clientBFirstMessage).toEqual(LineFixtures.blueDash.serialize());
     expect(await clientAFirstMessage).toEqual(LineFixtures.greenSquare.serialize());
+  });
+
+  it("should allow any client to receive any token movements", async () => {
+    const attachFirstMessageCatcher = (client: any) =>
+      new Promise((resolve) => {
+        client.on("TokenMoved", (message: any) => resolve(message));
+      });
+
+    const tokenA = await getAuthenticatedTokenFor("Atalykis");
+    const tokenB = await getAuthenticatedTokenFor("Aetherall");
+
+    const clientA = await createConnectedWSClientFor(tokenA);
+    const clientB = await createConnectedWSClientFor(tokenB);
+
+    setTimeout(() => clientA.close(), 1000);
+    setTimeout(() => clientB.close(), 1000);
+
+    const clientAFirstMessage = attachFirstMessageCatcher(clientA);
+    const clientBFirstMessage = attachFirstMessageCatcher(clientB);
+
+    await app.get(MoveTokenCommandHandler).handle({
+      roomName: "TheBizarreRoom",
+      token: TokenFixture.basic50,
+      newPosition: new Position({ x: 100, y: 100 }),
+      author: "Atalykis",
+    });
+
+    await app.get(MoveTokenCommandHandler).handle({
+      roomName: "TheBizarreRoom",
+      token: TokenFixture.basic150,
+      newPosition: new Position({ x: 200, y: 200 }),
+      author: "Atalykis",
+    });
+
+    await wait(500);
+
+    expect(await clientAFirstMessage).toEqual(TokenFixture.basic200);
+    expect(await clientBFirstMessage).toEqual(TokenFixture.basic100);
   });
 });

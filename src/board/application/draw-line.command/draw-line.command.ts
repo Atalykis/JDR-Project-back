@@ -17,7 +17,7 @@ export class DrawLineCommandHandler {
     if (!board) {
       board = new Board(roomName);
     }
-    board.draw(line, author);
+    board.drawLine(line, author);
     await this.boardStore.save(board);
     this.eventBus.publish({ type: "LineAdded", payload: { roomName, line, author } });
     console.log("published line into eventBus");
