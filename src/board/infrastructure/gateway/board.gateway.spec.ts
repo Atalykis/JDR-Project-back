@@ -38,7 +38,7 @@ describe("BoardGateway", () => {
 
   let getAuthenticatedTokenFor: ReturnType<typeof makeGetAuthenticatedToken>;
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     const module = await Test.createTestingModule({ imports: [BackendModule] })
       .overrideProvider(BoardStore)
       .useValue(store)
@@ -49,7 +49,7 @@ describe("BoardGateway", () => {
     await app.listen(8000);
   });
 
-  afterAll(async () => {
+  afterEach(async () => {
     await app.close();
   });
 
@@ -107,23 +107,23 @@ describe("BoardGateway", () => {
     const clientAFirstMessage = attachFirstMessageCatcher(clientA);
     const clientBFirstMessage = attachFirstMessageCatcher(clientB);
 
-    await app.get(MoveTokenCommandHandler).handle({
-      roomName: "TheBizarreRoom",
-      token: TokenFixture.basic50,
-      newPosition: new Position({ x: 100, y: 100 }),
-      author: "Atalykis",
-    });
 
     await app.get(MoveTokenCommandHandler).handle({
       roomName: "TheBizarreRoom",
-      token: TokenFixture.basic150,
-      newPosition: new Position({ x: 200, y: 200 }),
+      token: TokenFixture.basic100,
       author: "Atalykis",
+    });
+
+
+    await app.get(MoveTokenCommandHandler).handle({
+      roomName: "TheBizarreRoom",
+      token: TokenFixture.basic200,
+      author: "Aetherall",
     });
 
     await wait(500);
 
-    expect(await clientAFirstMessage).toEqual(TokenFixture.basic200);
-    expect(await clientBFirstMessage).toEqual(TokenFixture.basic100);
+    expect(await clientAFirstMessage).toEqual(TokenFixture.basic200.serialize());
+    expect(await clientBFirstMessage).toEqual(TokenFixture.basic100.serialize());
   });
 });

@@ -18,10 +18,10 @@ describe("draw line command", () => {
     const board = new BoardBuilder().withRoomName("room-1").build();
     board.tokens.push({ token, owner: "Atalykis" });
     store.save(board);
+    const movedToken = TokenFixture.basic50
+    movedToken.move(new Position({x: 100, y:100}))
 
-    const newPosition = new Position({ x: 100, y: 100 });
-
-    await handler.handle({ roomName: board.roomName, token, newPosition, author });
+    await handler.handle({ roomName: board.roomName, token: movedToken, author });
 
     const saved = await store.load("room-1");
 

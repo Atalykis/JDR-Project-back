@@ -15,7 +15,7 @@ export class WatchTokensSubscriptionHandler {
     const handler = (event: Event) => {
       if (subscription.roomName !== event.payload.roomName) return;
       if (subscription.author === event.payload.author) return;
-      console.log("pushing token into queue");
+      console.log("pushing token into queue !");
       queue.push(event.payload.token);
     };
 

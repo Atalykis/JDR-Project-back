@@ -11,7 +11,7 @@ export class TokenFixture {
   );
 
   static basic100 = new Token(
-    new Position({ x: 50, y: 50 }),
+    new Position({ x: 100, y: 100 }),
     new Size({ width: 50, height: 50 }),
     "https://dummyimage.com/50x50/000/ff00ff",
     new CharacterIdentity("basicCharacter", "Atalykis", "basicAdventure")
@@ -25,7 +25,7 @@ export class TokenFixture {
   );
 
   static basic200 = new Token(
-    new Position({ x: 150, y: 150 }),
+    new Position({ x: 200, y: 200 }),
     new Size({ width: 50, height: 50 }),
     "https://dummyimage.com/50x50/000/ff00ff",
     new CharacterIdentity("basicCharacter", "Aetherall", "basicAdventure")

@@ -37,9 +37,33 @@ type LineType {
   points: [PointType!]!
 }
 
+type TokenIdType {
+  name: String!
+  owner: String!
+  adventure: String!
+}
+
+type PositionType {
+  x: Float!
+  y: Float!
+}
+
+type SizeType {
+  width: Float!
+  height: Float!
+}
+
+type TokenType {
+  id: TokenIdType!
+  position: PositionType!
+  size: SizeType!
+  imageSrc: String!
+}
+
 type BoardType {
   roomName: String!
   lines: [LineType!]!
+  tokens: [TokenType!]!
 }
 
 type Adventure {
@@ -56,6 +80,29 @@ input LineInput {
   color: String!
   thickness: Float!
   points: [PointInput!]!
+}
+
+input TokenIdInput {
+  name: String!
+  owner: String!
+  adventure: String!
+}
+
+input PositionInput {
+  x: Float!
+  y: Float!
+}
+
+input SizeInput {
+  width: Float!
+  height: Float!
+}
+
+input TokenInput {
+  id: TokenIdInput!
+  position: PositionInput!
+  size: SizeInput!
+  imageSrc: String!
 }
 
 type Query {
@@ -80,6 +127,7 @@ type Mutation {
   addCharacter(character: CharacterInput!, room: String!): Room!
   createCharacter(description: String!, adventure: String!, name: String!): Character!
   draw(line: LineInput!, roomName: String!): BoardType!
+  move(token: TokenInput!, roomName: String!): BoardType!
 }
 
 input CharacterInput {

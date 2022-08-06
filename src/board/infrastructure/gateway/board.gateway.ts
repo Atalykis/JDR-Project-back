@@ -18,6 +18,7 @@ import { TokenManager } from "../../../user/application/token-manager";
 import { WatchTokensSubscriptionHandler } from "../../application/watch-token.subscription/watch-token.subscription";
 import { Line } from "../../domain/line";
 import { Token } from "../../domain/token";
+import { combineAsyncIterables } from "../../../utils/combine-async-iterator";
 @WebSocketGateway({
   cors: {
     origin: "http://localhost:8080",
@@ -36,51 +37,46 @@ export class BoardGateway implements OnGatewayConnection {
 
   async handleConnection(client: Socket, ...args: any[]) {
     const token = client.handshake.headers.authorization;
+    const room = (client.handshake.headers.room as string)
     if (!token) {
       // throw new Error("Not authenticated");
+      return;
+    }
+    if (!room) {
+      // throw new Error("Invalid Room Header");
       return;
     }
 
     const username = this.tokenManager.getUsernameFromAccessToken(token);
 
-    const lineQueue = this.watchLinesSubscriptionHandler.handle({ user: username, roomName: "TheBizarreRoom" });
+    const lineQueue = this.watchLinesSubscriptionHandler.handle({ user: username, roomName: room });
 
-    // const tokenQueue = this.watchTokenSubscriptionHandler.handle({ author: username, roomName: "TheBizarreRoom" });
+    const tokenQueue = this.watchTokenSubscriptionHandler.handle({ author: username, roomName: room });
 
     const lineClosing = closeable(lineQueue[Symbol.asyncIterator](), async () => {
       lineQueue.close();
     });
 
-    // const tokenClosing = closeable(tokenQueue[Symbol.asyncIterator](), async () => {
-    //   tokenQueue.close();
-    // });
-
-    // const queue = new Queue<Line | Token>();
-    // const merged = closeable(queue[Symbol.asyncIterator](), async () => {
-    //   queue.close();
-    // });
-
-    client.on("disconnect", () => {
-      lineClosing.close();
-      // tokenQueue.close();
+    const tokenClosing = closeable(tokenQueue[Symbol.asyncIterator](), async () => {
+      tokenQueue.close();
     });
 
-    for await (const line of lineClosing) {
-      client.emit("LineAdded", line.serialize());
-      // queue.push(line);
+    const merged = combineAsyncIterables<Line | Token>([tokenClosing, lineClosing])
+  
+      
+    for await (const chunck of merged) {
+      if (chunck instanceof Token) {
+        client.emit("TokenMoved", chunck.serialize());
+      } else {
+        client.emit("LineAdded", chunck.serialize());
+      }
     }
 
-    // for await (const token of tokenClosing) {
-    //   // client.emit("TokenMoved", token.toObject());
-    //   queue.push(token);
-    // }
 
-    // for await (const chunck of merged) {
-    //   if (typeof chunck === typeof Token) {
-    //     client.emit("TokenMoved", chunck.serialize());
-    //   } else {
-    //     client.emit("LineAdded", chunck.serialize());
-    //   }
-    // }
+      client.on("disconnect", () => {
+        lineClosing.close();
+        tokenQueue.close();
+      });
+    }
   }
-}
+  

@@ -8,7 +8,7 @@ describe("WatchTokenSubscription", () => {
 
   it("should allow to iterate over the moved token of a board", async () => {
     const room = "room-1";
-    const tokenWatcher = await handler.handle({ roomName: room, author: "Aetherall" });
+    const tokenWatcher = handler.handle({ roomName: room, author: "Aetherall" });
 
     eventBus.publish({ type: "TokenMoved", payload: { roomName: room, token: TokenFixture.basic50, author: "Atalykis" } });
 

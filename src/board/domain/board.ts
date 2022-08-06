@@ -19,10 +19,10 @@ export class Board {
     this.lines.push({ author, line });
   }
 
-  moveToken(id: CharacterIdentity, newPosition: Position, author: string) {
-    const moved = this.tokens.find((token) => token.owner === author && token.token.identity.equals(id));
+  moveToken(token: Token, author: string) {
+    const moved = this.tokens.find((t) => t.owner === author && t.token.identity.equals(token.identity));
     if (!moved) return;
-    moved.token.move(newPosition);
+    moved.token.move(token.pos);
     return moved;
   }
 }

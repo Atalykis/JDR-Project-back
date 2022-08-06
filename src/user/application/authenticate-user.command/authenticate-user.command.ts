@@ -12,7 +12,8 @@ export class AuthenticateUserHandler {
   async handle(command: AuthenticateUserCommand) {
     const user = await this.userStore.load(command.username);
     if (user && user.pass === command.password) {
-      return this.tokenManager.generateAccessToken(user);
+      const token = this.tokenManager.generateAccessToken(user);
+      return 
     } else {
       throw new CannotAuthenticateUserError(command.username);
     }

@@ -6,19 +6,17 @@ import { EventBus } from "../event-bus";
 export interface MoveTokenCommand {
   roomName: string;
   token: Token;
-
-  newPosition: Position;
   author: string;
 }
 
 export class MoveTokenCommandHandler {
   constructor(private boardStore: BoardStore, private readonly eventBus: EventBus) {}
 
-  async handle({ roomName, token, newPosition, author }: MoveTokenCommand) {
+  async handle({ roomName, token, author }: MoveTokenCommand) {
     let board = await this.boardStore.load(roomName);
     if (!board) return;
 
-    const moved = board.moveToken(token.identity, newPosition, author);
+    const moved = board.moveToken(token, author);
     if (!moved) return;
     await this.boardStore.save(board);
 

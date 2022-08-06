@@ -15,7 +15,7 @@ export class Size extends Value({
 // export class Token extends Value({ position: Position, size: Size, image: String }) {}
 
 export class Token {
-  constructor(private position: Position, private size: Size, private image: string, private id: CharacterIdentity) {}
+  constructor(private position: Position, private size: Size, private imageSrc: string, private id: CharacterIdentity) {}
 
   move(position: Position) {
     this.position = position;
@@ -31,9 +31,10 @@ export class Token {
 
   serialize() {
     return {
-      position: this.position,
-      size: this.size,
-      image: this.image,
+      id: this.id.toObject(),
+      position: this.position.serialize(),
+      size: this.size.serialize(),
+      imageSrc: this.imageSrc,
     };
   }
 }

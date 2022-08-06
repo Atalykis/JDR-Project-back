@@ -4,6 +4,7 @@ import { UserModule } from "../../user/infrastructure/user.module";
 import { BoardStore } from "../application/board.store";
 import { DrawLineCommandHandler } from "../application/draw-line.command/draw-line.command";
 import { EventBus } from "../application/event-bus";
+import { GetBoardQueryHandler } from "../application/get-board.query/get-board.query";
 import { GetLinesQueryHandler } from "../application/get-lines.query/get-lines.query";
 import { MoveTokenCommandHandler } from "../application/move-token.command/move-token.command";
 import { WatchLineSubscriptionHandler } from "../application/watch-lines.subscription/watch-lines.subscription";
@@ -39,6 +40,11 @@ import { BoardResolver } from "./graphql/board.resolver";
     {
       provide: GetLinesQueryHandler,
       useFactory: (boardStore: BoardStore) => new GetLinesQueryHandler(boardStore),
+      inject: [BoardStore],
+    },
+    {
+      provide: GetBoardQueryHandler,
+      useFactory: (boardStore: BoardStore) => new GetBoardQueryHandler(boardStore),
       inject: [BoardStore],
     },
     {
