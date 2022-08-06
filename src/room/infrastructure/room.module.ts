@@ -1,4 +1,6 @@
 import { Module } from "@nestjs/common";
+import { BoardStore } from "../../board/application/board.store";
+import { BoardModule } from "../../board/infrastructure/board.module";
 import { CharacterStore } from "../../character/application/character.store";
 import { CharacterModule } from "../../character/character.module";
 import { UserModule } from "../../user/infrastructure/user.module";
@@ -16,16 +18,20 @@ import { RoomResolver } from "./qraphql/room.resolver";
 import { RoomStoreInMemory } from "./store/room.store.in-memory";
 
 @Module({
-  imports: [UserModule, CharacterModule],
+  imports: [UserModule, CharacterModule, BoardModule],
   controllers: [RoomController],
   providers: [
     { provide: "RoomStore", useClass: RoomStoreInMemory },
     {
       provide: CreateRoomHandler,
-      useFactory: (roomStore: RoomStore) => new CreateRoomHandler(roomStore),
-      inject: ["RoomStore"],
+      useFactory: (roomStore: RoomStore, boardStore: BoardStore) => new CreateRoomHandler(roomStore, boardStore),
+      inject: ["RoomStore", "BoardStore"],
     },
-    { provide: AddCharacterCommandHandler, useFactory: (roomStore: RoomStore) => new AddCharacterCommandHandler(roomStore), inject: ["RoomStore"] },
+    { 
+      provide: AddCharacterCommandHandler,
+      useFactory: (roomStore: RoomStore, boardStore: BoardStore) => new AddCharacterCommandHandler(roomStore, boardStore),
+      inject: ["RoomStore", "BoardStore"] 
+    },
     {
       provide: JoinRoomHandler,
       useFactory: (roomStore: RoomStore) => new JoinRoomHandler(roomStore),

@@ -11,21 +11,6 @@ type Token {
   token: String!
 }
 
-type Character {
-  name: String!
-  owner: String!
-  adventure: String!
-  description: String!
-}
-
-type Room {
-  name: String!
-  gm: String!
-  adventure: String!
-  characters: [Character!]!
-  members: [String!]!
-}
-
 type PointType {
   x: Float!
   y: Float!
@@ -64,6 +49,21 @@ type BoardType {
   roomName: String!
   lines: [LineType!]!
   tokens: [TokenType!]!
+}
+
+type Character {
+  name: String!
+  owner: String!
+  adventure: String!
+  description: String!
+}
+
+type Room {
+  name: String!
+  gm: String!
+  adventure: String!
+  characters: [Character!]!
+  members: [String!]!
 }
 
 type Adventure {
