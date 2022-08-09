@@ -11,21 +11,6 @@ type Token {
   token: String!
 }
 
-type Character {
-  name: String!
-  owner: String!
-  adventure: String!
-  description: String!
-}
-
-type Room {
-  name: String!
-  gm: String!
-  adventure: String!
-  characters: [Character!]!
-  members: [String!]!
-}
-
 type PointType {
   x: Float!
   y: Float!
@@ -66,9 +51,46 @@ type BoardType {
   tokens: [TokenType!]!
 }
 
+type Character {
+  name: String!
+  owner: String!
+  adventure: String!
+  description: String!
+}
+
+type Room {
+  name: String!
+  gm: String!
+  adventure: String!
+  characters: [Character!]!
+  members: [String!]!
+}
+
 type Adventure {
   name: String!
   gm: String!
+}
+
+type StatisticValueType {
+  min: Float!
+  max: Float!
+}
+
+type CharacteristicType {
+  name: String!
+  value: String!
+}
+
+type StatisticType {
+  name: String!
+  value: StatisticValueType!
+}
+
+type CharacterTemplate {
+  name: String!
+  universe: String!
+  characteristics: [CharacteristicType!]!
+  statistics: [StatisticType!]!
 }
 
 input PointInput {
@@ -105,6 +127,21 @@ input TokenInput {
   imageSrc: String!
 }
 
+input StatisticValueInput {
+  min: Float!
+  max: Float!
+}
+
+input CharacteristicInput {
+  name: String!
+  value: String!
+}
+
+input StatisticInput {
+  name: String!
+  value: StatisticValueInput!
+}
+
 type Query {
   adventure(name: String!): Adventure!
   adventures: [Adventure!]!
@@ -114,6 +151,8 @@ type Query {
   characters(adventure: String!): [Character!]!
   character(adventure: String!, name: String!): Character!
   board(roomName: String!): BoardType!
+  universeCharacterTemplates(universe: String!): [CharacterTemplate!]!
+  characterTemplate(universe: String!, name: String!): CharacterTemplate!
 }
 
 type Mutation {
@@ -128,10 +167,20 @@ type Mutation {
   createCharacter(description: String!, adventure: String!, name: String!): Character!
   draw(line: LineInput!, roomName: String!): BoardType!
   move(token: TokenInput!, roomName: String!): BoardType!
+  createCharacterTemplate(universe: String!, name: String!): CharacterTemplate!
+  addCharacteristic(characteristic: CharacteristicInput!, id: CharacterTemplateIdInput!): CharacterTemplate!
+  setCharacteristicValue(characteristic: CharacteristicInput!, id: CharacterTemplateIdInput!): CharacterTemplate!
+  addStatistic(statistic: StatisticInput!, id: CharacterTemplateIdInput!): CharacterTemplate!
+  setStatisticValue(statistic: StatisticInput!, id: CharacterTemplateIdInput!): CharacterTemplate!
 }
 
 input CharacterInput {
   name: String!
   owner: String!
   adventure: String!
+}
+
+input CharacterTemplateIdInput {
+  name: String!
+  universe: String!
 }

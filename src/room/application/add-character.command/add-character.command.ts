@@ -1,4 +1,6 @@
-import { CharacterIdentity } from "../../../character/domain/character";
+import { BoardStore } from "../../../board/application/board.store";
+import { Position, Size, Token } from "../../../board/domain/token";
+import { Character, CharacterIdentity } from "../../../character/domain/character";
 import { RoomStore } from "../room.store";
 
 export interface AddCharacterCommand {
@@ -7,7 +9,7 @@ export interface AddCharacterCommand {
 }
 
 export class AddCharacterCommandHandler {
-  constructor(private readonly roomStore: RoomStore) {}
+  constructor(private readonly roomStore: RoomStore, private readonly boardStore: BoardStore) {}
 
   async handle(command: AddCharacterCommand) {
     const room = await this.roomStore.load(command.room);
@@ -15,6 +17,14 @@ export class AddCharacterCommandHandler {
       throw new CannotAddCharacterInsideNonExistingRoom(command.room);
     }
     room.addCharacter(command.character);
+    const token = Token.initialTokenFor(command.character)
+    
+    const board = await this.boardStore.load(command.room)
+    if (!board){
+      return
+    }
+    board.addToken(command.character.owner, token)
+    this.boardStore.save(board)
   }
 }
 

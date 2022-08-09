@@ -59,5 +59,6 @@ import { BoardResolver } from "./graphql/board.resolver";
     },
     BoardResolver,
   ],
+  exports: ["BoardStore"]
 })
 export class BoardModule {}

@@ -7,7 +7,7 @@ export class TokenFixture {
     new Position({ x: 50, y: 50 }),
     new Size({ width: 50, height: 50 }),
     "https://dummyimage.com/50x50/000/ff00ff",
-    new CharacterIdentity("basicCharacter", "Atalykis", "basicAdventure")
+    new CharacterIdentity("Jojo", "Atalykis", "TheGreatEscape")
   );
 
   static basic100 = new Token(

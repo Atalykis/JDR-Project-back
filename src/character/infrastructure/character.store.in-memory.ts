@@ -1,6 +1,5 @@
 import { CharacterStore } from "../application/character.store";
 import { Character, CharacterIdentity } from "../domain/character";
-import { CharacterFixtures } from "../domain/character.builder";
 
 export class CharacterStoreInMemory implements CharacterStore {
   characters: Character[] = [];

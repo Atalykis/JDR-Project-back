@@ -1,3 +1,5 @@
+import { BoardStore } from "../../../board/application/board.store";
+import { Board } from "../../../board/domain/board";
 import { Room } from "../../domain/room";
 import { RoomStore } from "../room.store";
 
@@ -8,7 +10,7 @@ export interface CreateRoomCommand {
 }
 
 export class CreateRoomHandler {
-  constructor(private readonly roomStore: RoomStore) {}
+  constructor(private readonly roomStore: RoomStore, private readonly boardStore: BoardStore) {}
 
   async handle(command: CreateRoomCommand) {
     const alreadyExistingRoom = await this.roomStore.load(command.name);
@@ -18,6 +20,8 @@ export class CreateRoomHandler {
     }
     const room = new Room(command.name, command.gm, command.adventure);
     await this.roomStore.add(room);
+    const board = new Board(command.name)
+    await this.boardStore.save(board)
     return room.name;
   }
 }

@@ -25,4 +25,8 @@ export class Board {
     moved.token.move(token.pos);
     return moved;
   }
+
+  addToken(owner: string, token: Token){
+    this.tokens.push({owner, token})
+  }
 }

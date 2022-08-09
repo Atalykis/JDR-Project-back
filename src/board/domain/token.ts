@@ -16,6 +16,10 @@ export class Size extends Value({
 
 export class Token {
   constructor(private position: Position, private size: Size, private imageSrc: string, private id: CharacterIdentity) {}
+  
+  static initialTokenFor(character: CharacterIdentity){
+    return new Token(new Position({x: 50, y: 50}), new Size({height: 50, width: 50}), "https://dummyimage.com/50x50/000/ff00ff", character)
+  }
 
   move(position: Position) {
     this.position = position;
@@ -37,4 +41,5 @@ export class Token {
       imageSrc: this.imageSrc,
     };
   }
+
 }
