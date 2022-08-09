@@ -6,6 +6,7 @@ import { RoomModule } from "./room/infrastructure/room.module";
 import { CharacterModule } from "./character/character.module";
 import { BoardModule } from "./board/infrastructure/board.module";
 import { AdventureModule } from "./adventure/adventure.module";
+import { CharacterTemplateModule } from "./character-template/infrastructure/character-template.module";
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { AdventureModule } from "./adventure/adventure.module";
     RoomModule,
     CharacterModule,
     BoardModule,
+    CharacterTemplateModule,
     GraphQLModule.forRoot({
       installSubscriptionHandlers: true,
       // subscriptions: {

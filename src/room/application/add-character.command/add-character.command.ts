@@ -17,12 +17,13 @@ export class AddCharacterCommandHandler {
       throw new CannotAddCharacterInsideNonExistingRoom(command.room);
     }
     room.addCharacter(command.character);
-    const token = new Token(new Position({x: 50, y: 50}), new Size({height: 50, width: 50}), "https://dummyimage.com/50x50/000/ff00ff", command.character)
+    const token = Token.initialTokenFor(command.character)
+    
     const board = await this.boardStore.load(command.room)
     if (!board){
       return
     }
-    board.tokens.push({owner: command.character.owner, token})
+    board.addToken(command.character.owner, token)
     this.boardStore.save(board)
   }
 }
