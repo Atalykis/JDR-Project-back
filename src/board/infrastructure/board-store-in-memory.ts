@@ -10,8 +10,11 @@ export class InMemoryBoardStore extends BoardStore implements OnModuleInit {
     await this.boards.clear();
     const board1 = new BoardBuilder().withRoomName("greatRoom").withbasicsTokens().build();
     const board2 = new BoardBuilder().withRoomName("TheBizarreRoom").withbasicsTokens().build();
+    const board3 = new BoardBuilder().withRoomName("basicRoom").build();
     await this.save(board1);
     await this.save(board2);
+    await this.save(board3);
+
   }
 
   async onModuleInit() {

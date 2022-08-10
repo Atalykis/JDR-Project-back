@@ -15,11 +15,11 @@ describe("AdventureCreationCommand", () => {
     expect(adventure).toBeDefined();
   });
 
-  it("should not allow a user to create two room with same name", async () => {
-    const command: CreateAdventureCommand = { name: "room", gm: "Gm" };
+  it("should not allow a user to create two adventure with same name", async () => {
+    const command: CreateAdventureCommand = { name: "existing", gm: "Gm" };
     const adventureStore: AdventureStore = new AdventureStoreInMemory();
     const handler = new CreateAdventureHandler(adventureStore);
-    const existing = new Adventure("room", "Gm");
+    const existing = new Adventure("existing", "Gm");
     await adventureStore.add(existing);
 
     await expect(() => handler.handle(command)).rejects.toThrow(CannotCreateAdventureWithAlreadyTakenNameError);
