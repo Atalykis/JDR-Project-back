@@ -1,5 +1,5 @@
 import { Character } from "../../domain/character";
-import { CharacterStoreInMemory } from "../../infrastructure/character.store.in-memory";
+import { CharacterStoreInMemory } from "../../infrastructure/store/character.store.in-memory";
 import { GetCharactersHandler, GetCharactersQuery } from "./get-characters.query";
 
 describe("GetCharactersQuery", () => {

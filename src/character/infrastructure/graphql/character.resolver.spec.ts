@@ -1,5 +1,5 @@
 import { CharacterFixtures } from "../../domain/character.builder";
-import { CharacterStoreInMemory } from "../character.store.in-memory";
+import { CharacterStoreInMemory } from "../store/character.store.in-memory";
 import { gql } from "apollo-server-express";
 import { DocumentNode, print } from "graphql";
 import { Test, TestingModule } from "@nestjs/testing";

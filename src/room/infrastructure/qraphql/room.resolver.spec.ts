@@ -5,7 +5,7 @@ import { GraphqlTestClient } from "../../../test/graphql.test-client";
 import { RoomStoreInMemory } from "../store/room.store.in-memory";
 import { gql } from "apollo-server-express";
 import { CharacterFixtures } from "../../../character/domain/character.builder";
-import { CharacterStoreInMemory } from "../../../character/infrastructure/character.store.in-memory";
+import { CharacterStoreInMemory } from "../../../character/infrastructure/store/character.store.in-memory";
 import { Room } from "../../domain/room";
 import { RoomFixtures } from "../../domain/room-builder";
 import { Adventure } from "../../../adventure/domain/adventure";
