@@ -39,4 +39,8 @@ export class CharacterStoreInMemory implements CharacterStore {
   async clear() {
     this.characters = [];
   }
+
+  async loadAll(): Promise<Character[]> {
+    return this.characters
+  }
 }

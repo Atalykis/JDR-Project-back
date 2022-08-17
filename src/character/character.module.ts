@@ -7,15 +7,14 @@ import { GetCharactersHandler } from "./application/get-characters.query/get-cha
 import { CharacterStoreInMemory } from "./infrastructure/store/character.store.in-memory";
 import { CharacterResolver } from "./infrastructure/graphql/character.resolver";
 import { CharacterController } from "./infrastructure/http/character.controller";
-import { MongooseModule } from "@nestjs/mongoose";
-import { Character as CharacterModel, CharacterSchema } from "./domain/character.schema";
-import { CharacterMongoStore } from "./infrastructure/store/character.mongo.store";
+import { CharacterMongooseStore, MongooseCharacterProvider } from "./infrastructure/store/character.mongoose.store/character.mongoose.store";
+import { CharacterMongoStore } from "./infrastructure/store/character.mongo.store/character.mongo.store";
 
 @Module({
-  imports: [UserModule, MongooseModule.forFeature([{ name: CharacterModel.name, schema: CharacterSchema }])],
+  imports: [UserModule, MongooseCharacterProvider],
   controllers: [CharacterController],
   providers: [
-    { provide: "CharacterStore", useClass: CharacterMongoStore },
+    { provide: "CharacterStore", useClass: CharacterStoreInMemory },
     {
       provide: CreateCharacterHandler,
       useFactory: (characterStore: CharacterStore) => new CreateCharacterHandler(characterStore),

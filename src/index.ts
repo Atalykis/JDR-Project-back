@@ -1,12 +1,9 @@
 import { NestFactory } from "@nestjs/core";
-import { Module } from "@nestjs/common";
-import { GraphQLModule, Resolver, Query, Mutation, ObjectType, Field, ResolveField, Parent } from "@nestjs/graphql";
-import { UserModule } from "./user/infrastructure/user.module";
-import { RoomModule } from "./room/infrastructure/room.module";
-import { CharacterModule } from "./character/character.module";
 import { BackendModule } from "./backend.module";
+import { MongoDbClient } from "./character/infrastructure/mongodb/mongodb.client";
 
 async function bootstrap() {
+  MongoDbClient.init("9000", "test")
   const app = await NestFactory.create(BackendModule);
   app.enableCors({ origin: "*" });
   app.listen(3000);
