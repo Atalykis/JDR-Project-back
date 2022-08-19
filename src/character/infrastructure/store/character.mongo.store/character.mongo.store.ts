@@ -1,10 +1,14 @@
+import { Inject } from "@nestjs/common";
 import { Collection, MongoClient } from "mongodb";
 import { CharacterStore } from "../../../application/character.store";
 import { CharacterIdentity, Character } from "../../../domain/character";
 import { MongoDbClient } from "../../mongodb/mongodb.client";
 
 export class CharacterMongoStore implements CharacterStore {
-  private collection: Collection = MongoDbClient.getCollection("characters")
+  private collection: Collection 
+  constructor(@Inject("MongoDbClient") private readonly mongoDbClient : MongoDbClient){
+    this.collection = this.mongoDbClient.getCollection("characters")
+  }
 
   async add(character: Character): Promise<void> {
     await this.collection.insertOne({name: character.name, owner: character.owner, adventure: character.adventure, description: character.description})

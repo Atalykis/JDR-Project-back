@@ -9,9 +9,10 @@ import { CharacterResolver } from "./infrastructure/graphql/character.resolver";
 import { CharacterController } from "./infrastructure/http/character.controller";
 import { CharacterMongooseStore, MongooseCharacterProvider } from "./infrastructure/store/character.mongoose.store/character.mongoose.store";
 import { CharacterMongoStore } from "./infrastructure/store/character.mongo.store/character.mongo.store";
+import { MongoDbClient } from "./infrastructure/mongodb/mongodb.client";
 
 @Module({
-  imports: [UserModule, MongooseCharacterProvider],
+  imports: [UserModule],
   controllers: [CharacterController],
   providers: [
     { provide: "CharacterStore", useClass: CharacterStoreInMemory },
@@ -30,7 +31,16 @@ import { CharacterMongoStore } from "./infrastructure/store/character.mongo.stor
       useFactory: (characterStore: CharacterStore) => new GetCharactersHandler(characterStore),
       inject: ["CharacterStore"],
     },
+
     CharacterResolver,
+    {
+      provide: "MongoDbClient",
+      useFactory: async () => {
+        const client = new MongoDbClient()
+        await client.init("9000", "test")
+        return client
+      }
+    }
   ],
   exports: ["CharacterStore"],
 })
