@@ -10,7 +10,7 @@ describe("LeaveRoomCommand", () => {
     const roomStore: RoomStore = new RoomStoreInMemory();
     const room = new Room("hall", "gm", "GreatEscape");
     await roomStore.add(room);
-    room.join("Cyril", new CharacterIdentity("Jojoo", "Cyril", "GreatEscape"));
+    room.join("Cyril");
 
     expect(room.members).toEqual(["Cyril"]);
     const handler = new LeaveRoomHandler(roomStore);

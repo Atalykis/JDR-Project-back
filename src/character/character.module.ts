@@ -6,14 +6,14 @@ import { GetCharacterHandler } from "./application/get-character.query /get-char
 import { GetCharactersHandler } from "./application/get-characters.query/get-characters.query";
 import { CharacterStoreInMemory } from "./infrastructure/store/character.store.in-memory";
 import { CharacterResolver } from "./infrastructure/graphql/character.resolver";
-import { CharacterController } from "./infrastructure/http/character.controller";
+// import { CharacterController } from "./infrastructure/http/character.controller";
 import { CharacterMongooseStore, MongooseCharacterProvider } from "./infrastructure/store/character.mongoose.store/character.mongoose.store";
 import { CharacterMongoStore } from "./infrastructure/store/character.mongo.store/character.mongo.store";
 import { MongoDbClient } from "./infrastructure/mongodb/mongodb.client";
 
 @Module({
   imports: [UserModule],
-  controllers: [CharacterController],
+  // controllers: [CharacterController],
   providers: [
     { provide: "CharacterStore", useClass: CharacterStoreInMemory },
     {
@@ -33,14 +33,14 @@ import { MongoDbClient } from "./infrastructure/mongodb/mongodb.client";
     },
 
     CharacterResolver,
-    {
-      provide: "MongoDbClient",
-      useFactory: async () => {
-        const client = new MongoDbClient()
-        await client.init("9000", "test")
-        return client
-      }
-    }
+    // {
+    //   provide: "MongoDbClient",
+    //   useFactory: async () => {
+    //     const client = new MongoDbClient()
+    //     await client.init("9000", "test")
+    //     return client
+    //   }
+    // }
   ],
   exports: ["CharacterStore"],
 })

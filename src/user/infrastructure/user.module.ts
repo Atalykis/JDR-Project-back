@@ -6,12 +6,12 @@ import { TokenManager } from "../application/token-manager";
 import { UserStore } from "../application/user.store";
 import { UserResolver } from "./graphql/user.resolver";
 import { AuthGuard } from "./guard/auth.guard";
-import { UserController } from "./http/user.controller";
+// import { UserController } from "./http/user.controller";
 import { UserStoreInMemory } from "./store/user.store.in-memory";
 import { CryptrTokenManager } from "./token/crypto.token-manager";
 
 @Module({
-  controllers: [UserController],
+  // controllers: [UserController],
   providers: [
     { provide: "UserStore", useClass: UserStoreInMemory },
     { provide: "TokenManager", useFactory: () => new CryptrTokenManager("my_super_secret_key") },

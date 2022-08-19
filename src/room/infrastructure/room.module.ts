@@ -13,13 +13,13 @@ import { JoinRoomHandler } from "../application/join-room.command/join-room.comm
 import { KickPlayerHandler } from "../application/kick-player.command/kick-player.command";
 import { LeaveRoomHandler } from "../application/leave-room.command/leave-room.command";
 import { RoomStore } from "../application/room.store";
-import { RoomController } from "./http/room.controller";
+// import { RoomController } from "./http/room.controller";
 import { RoomResolver } from "./qraphql/room.resolver";
 import { RoomStoreInMemory } from "./store/room.store.in-memory";
 
 @Module({
   imports: [UserModule, CharacterModule, BoardModule],
-  controllers: [RoomController],
+  // controllers: [RoomController],
   providers: [
     { provide: "RoomStore", useClass: RoomStoreInMemory },
     {

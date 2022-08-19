@@ -57,9 +57,9 @@ describe("CharacterStore", () => {
     //   characterStoreTest(getMongooseStore);
     // })
     
-    describe("CharacterMongoStore", () => {
-      const getMongoStore = useMongoStore(CharacterMongoStore)
+  //   describe("CharacterMongoStore", () => {
+  //     const getMongoStore = useMongoStore(CharacterMongoStore)
       
-      characterStoreTest(getMongoStore)
-  })
+  //     characterStoreTest(getMongoStore)
+  // })
 });
