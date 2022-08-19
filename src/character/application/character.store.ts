@@ -5,4 +5,6 @@ export interface CharacterStore {
   load(character: CharacterIdentity): Promise<Character | undefined>;
   loadOwnedForAdventure(owner: string, adventure: string): Promise<Character[]>;
   loadMany(charactersIds: CharacterIdentity[]): Promise<Character[]>;
+  loadAll(): Promise<Character[]>
+  clear(): Promise<void>
 }

@@ -4,9 +4,12 @@ import { CharacterStore } from "./application/character.store";
 import { CreateCharacterHandler } from "./application/create-character.command/create-character.comand";
 import { GetCharacterHandler } from "./application/get-character.query /get-character.query";
 import { GetCharactersHandler } from "./application/get-characters.query/get-characters.query";
-import { CharacterStoreInMemory } from "./infrastructure/character.store.in-memory";
+import { CharacterStoreInMemory } from "./infrastructure/store/character.store.in-memory";
 import { CharacterResolver } from "./infrastructure/graphql/character.resolver";
 import { CharacterController } from "./infrastructure/http/character.controller";
+import { CharacterMongooseStore, MongooseCharacterProvider } from "./infrastructure/store/character.mongoose.store/character.mongoose.store";
+import { CharacterMongoStore } from "./infrastructure/store/character.mongo.store/character.mongo.store";
+import { MongoDbClient } from "./infrastructure/mongodb/mongodb.client";
 
 @Module({
   imports: [UserModule],
@@ -28,7 +31,16 @@ import { CharacterController } from "./infrastructure/http/character.controller"
       useFactory: (characterStore: CharacterStore) => new GetCharactersHandler(characterStore),
       inject: ["CharacterStore"],
     },
+
     CharacterResolver,
+    {
+      provide: "MongoDbClient",
+      useFactory: async () => {
+        const client = new MongoDbClient()
+        await client.init("9000", "test")
+        return client
+      }
+    }
   ],
   exports: ["CharacterStore"],
 })

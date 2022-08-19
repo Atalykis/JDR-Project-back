@@ -1,5 +1,5 @@
-import { CharacterStore } from "../application/character.store";
-import { Character, CharacterIdentity } from "../domain/character";
+import { CharacterStore } from "../../application/character.store";
+import { Character, CharacterIdentity } from "../../domain/character";
 
 export class CharacterStoreInMemory implements CharacterStore {
   characters: Character[] = [];
@@ -38,5 +38,9 @@ export class CharacterStoreInMemory implements CharacterStore {
 
   async clear() {
     this.characters = [];
+  }
+
+  async loadAll(): Promise<Character[]> {
+    return this.characters
   }
 }

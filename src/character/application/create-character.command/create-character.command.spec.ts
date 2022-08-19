@@ -1,5 +1,5 @@
 import { Character, CharacterIdentity } from "../../domain/character";
-import { CharacterStoreInMemory } from "../../infrastructure/character.store.in-memory";
+import { CharacterStoreInMemory } from "../../infrastructure/store/character.store.in-memory";
 import { CannotCreateCharacterWithAlreadyTakenNameForUserError, CreateCharacterCommand, CreateCharacterHandler } from "./create-character.comand";
 
 describe("CreateCharacterCommand", () => {

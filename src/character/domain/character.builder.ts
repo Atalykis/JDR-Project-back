@@ -48,6 +48,10 @@ export class CharacterFixtures {
     return new CharacterBuilder("Jojo").inside("TheGreatEscape").for("Atalykis").build();
   }
 
+  static get Jonathan() {
+    return new CharacterBuilder("Jonathan").inside("TheGreatEscape").for("Atalykis").build();
+  }
+
   static get Dio() {
     return new CharacterBuilder("Dio").inside("TheGreatEscape").for("Aetherall").build();
   }

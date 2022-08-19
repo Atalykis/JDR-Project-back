@@ -38,6 +38,7 @@ Can a Room have multiple GM inside ?
 
 // Replace all HTTP infrastructure with GraphQl
 // Refacto Room Joining == character + user --> user + AddCharacter??
+MongoDb Js Driver Adapter
 
 JDR depend d'Authentication et c'est normal
 
