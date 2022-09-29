@@ -19,6 +19,10 @@ export class AdventureStoreInMemory implements AdventureStore {
     return this.adventures.find((a) => a.name === name);
   }
 
+  async loadManyFromGm(gm: string): Promise<Adventure[]> {
+    return this.adventures.filter((adventure) => adventure.gm === gm)
+  }
+
   async loadAll(): Promise<Adventure[]> {
     return this.adventures;
   }

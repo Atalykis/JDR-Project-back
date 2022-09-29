@@ -135,4 +135,38 @@ describe("AdventureResolver", () => {
       expect(result.errors[0].message).toEqual(new CannotCreateAdventureWithAlreadyTakenNameError(greatEscape.name).message);
     });
   });
+
+  describe("GetOwnedAdventuresQuery", () => {
+    const query = gql`
+    query GetOwnedAdventures{
+      ownedAdventures{
+        name
+        gm
+      }
+    }
+  `;
+    it("should allow a user to retrieve all his adventures", async () => {
+      const adventure = AdventureFixtures.atalykisAdventure;
+      const adventure2 = AdventureFixtures.atalykisAdventure2;
+      const basicAdventure = AdventureFixtures.basicAdventure
+
+      await adventureStore.add(adventure);
+      await adventureStore.add(adventure2);
+      await adventureStore.add(basicAdventure)
+
+      const result = await graphql.execute(query);
+
+      expect(result.errors).toBeUndefined();
+
+      expect(result.data).toEqual({
+        ownedAdventures: [{
+          name: adventure.name,
+          gm: adventure.gm,
+        }, {
+          name: adventure2.name,
+          gm: adventure2.gm,
+        }]
+      });
+    })
+  })
 });

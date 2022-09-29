@@ -4,6 +4,7 @@ import { AdventureStore } from "./application/adventure.store";
 import { CreateAdventureHandler } from "./application/create-adventure.command/create-adventure.command";
 import { GetAdventureQueryHandler } from "./application/get-adventure.query/get-adventure.query";
 import { GetAdventuresQueryHandler } from "./application/get-adventures-query/get-adventures.query";
+import { GetOwnedAdventuresQueryHandler } from "./application/get-owned-adventures.query/get-owned-adventures.query";
 import { AdventureStoreInMemory } from "./infrastructure/adventure.store.in-memory";
 import { AdventureResolver } from "./infrastructure/graphql/adventure.resolver";
 
@@ -25,6 +26,11 @@ import { AdventureResolver } from "./infrastructure/graphql/adventure.resolver";
       provide: CreateAdventureHandler,
       useFactory: (adventureStore: AdventureStore) => new CreateAdventureHandler(adventureStore),
       inject: ["AdventureStore"],
+    },
+    {
+      provide: GetOwnedAdventuresQueryHandler,
+      useFactory: (adventureStore: AdventureStore) => new GetOwnedAdventuresQueryHandler(adventureStore),
+      inject:["AdventureStore"],
     },
     AdventureResolver,
   ],

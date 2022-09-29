@@ -7,6 +7,7 @@ import {
 } from "../../application/create-adventure.command/create-adventure.command";
 import { CannotRetrieveNonExistingAdventureError, GetAdventureQueryHandler } from "../../application/get-adventure.query/get-adventure.query";
 import { GetAdventuresQueryHandler } from "../../application/get-adventures-query/get-adventures.query";
+import { GetOwnedAdventuresQueryHandler } from "../../application/get-owned-adventures.query/get-owned-adventures.query";
 
 @ObjectType("Adventure")
 class AdventureType {
@@ -23,7 +24,8 @@ export class AdventureResolver {
   constructor(
     private readonly getAdventureQueryHandler: GetAdventureQueryHandler,
     private readonly getAdventuresQueryHandler: GetAdventuresQueryHandler,
-    private readonly createAdventureHandler: CreateAdventureHandler
+    private readonly createAdventureHandler: CreateAdventureHandler,
+    private readonly getOwnedAdventuresQueryHandler: GetOwnedAdventuresQueryHandler
   ) {}
 
   @Query(() => AdventureType)
@@ -42,6 +44,12 @@ export class AdventureResolver {
   async adventures(): Promise<AdventureType[]> {
     const adventures = await this.getAdventuresQueryHandler.handle({});
     return adventures;
+  }
+
+  @Query(() => [AdventureType])
+  async ownedAdventures(@Username() gm: string): Promise<AdventureType[]> {
+    const adventures = await this.getOwnedAdventuresQueryHandler.handle({ gm })
+    return adventures
   }
 
   @Mutation(() => AdventureType)

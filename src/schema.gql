@@ -145,6 +145,7 @@ input StatisticInput {
 type Query {
   adventure(name: String!): Adventure!
   adventures: [Adventure!]!
+  ownedAdventures: [Adventure!]!
   user(username: String!): User!
   room(name: String!): Room
   rooms(adventure: String!): [Room!]!
