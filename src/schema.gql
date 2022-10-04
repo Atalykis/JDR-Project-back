@@ -93,6 +93,11 @@ type CharacterTemplate {
   statistics: [StatisticType!]!
 }
 
+type Universe {
+  name: String!
+  owner: String!
+}
+
 input PointInput {
   x: Float!
   y: Float!
@@ -154,6 +159,8 @@ type Query {
   board(roomName: String!): BoardType!
   universeCharacterTemplates(universe: String!): [CharacterTemplate!]!
   characterTemplate(universe: String!, name: String!): CharacterTemplate!
+  universe(name: String!): Universe!
+  ownedUniverses: [Universe!]!
 }
 
 type Mutation {
@@ -173,6 +180,7 @@ type Mutation {
   setCharacteristicValue(characteristic: CharacteristicInput!, id: CharacterTemplateIdInput!): CharacterTemplate!
   addStatistic(statistic: StatisticInput!, id: CharacterTemplateIdInput!): CharacterTemplate!
   setStatisticValue(statistic: StatisticInput!, id: CharacterTemplateIdInput!): CharacterTemplate!
+  createUniverse(name: String!): Universe!
 }
 
 input CharacterInput {

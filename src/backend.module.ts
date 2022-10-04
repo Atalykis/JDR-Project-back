@@ -7,6 +7,7 @@ import { BoardModule } from "./board/infrastructure/board.module";
 import { AdventureModule } from "./adventure/adventure.module";
 import { CharacterTemplateModule } from "./character-template/infrastructure/character-template.module";
 import { MongooseModule } from "@nestjs/mongoose";
+import { UniverseModule } from "./universe/infrastructure/universe.module";
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { MongooseModule } from "@nestjs/mongoose";
     CharacterModule,
     BoardModule,
     CharacterTemplateModule,
+    UniverseModule,
     GraphQLModule.forRoot({
       installSubscriptionHandlers: true,
       // subscriptions: {
